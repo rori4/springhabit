@@ -17,17 +17,12 @@ public class UserController {
 
     @GetMapping("/register")
     public ModelAndView register() {
-        return  new ModelAndView("page-register");
+        return  new ModelAndView("register");
     }
 
     @PostMapping("/register")
     public ModelAndView register(UserRegisterRequestModel model) {
         this.userService.register(model);
         return  new ModelAndView("redirect:/login");
-    }
-
-    @GetMapping("/login")
-    public ModelAndView login() {
-        return  new ModelAndView("page-login");
     }
 }
