@@ -4,17 +4,13 @@
     <th:block th:replace="fragments/bundles/meta"></th:block>
     <!-- App title -->
     <title>SpringHabit - Responsive Admin Dashboard Template</title>
-    <th:block th:replace="fragments/bundles/css :: login-styles"></th:block>
+    <th:block th:replace="fragments/bundles/css :: main"></th:block>
 </head>
 <body>
-
 <div class="account-pages"></div>
 <div class="clearfix"></div>
 <div class="wrapper-page">
-    <div class="text-center">
-        <a href="index.html" class="logo"><span>Admin<span>to</span></span></a>
-        <h5 class="text-muted m-t-0 font-600">Responsive Admin Dashboard</h5>
-    </div>
+    <th:block th:replace="fragments/login-register/common :: logo"></th:block>
     <div class="m-t-40 card-box">
         <div class="text-center">
             <h4 class="text-uppercase font-bold m-b-0">Sign In</h4>
@@ -61,7 +57,7 @@
 
                 <div class="form-group m-t-30 m-b-0">
                     <div class="col-sm-12">
-                        <a href="page-recoverpw.html" class="text-muted"><i class="fa fa-lock m-r-5"></i> Forgot your
+                        <a href="/forgotten" class="text-muted"><i class="fa fa-lock m-r-5"></i> Forgot your
                             password?</a>
                     </div>
                 </div>
@@ -70,16 +66,10 @@
         </div>
     </div>
     <!-- end card-box-->
-
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <p class="text-muted">Don't have an account? <a href="page-register.html" class="text-primary m-l-5"><b>Sign
-                Up</b></a></p>
-        </div>
-    </div>
-
+    <th:block th:replace="fragments/login-register/common :: sign-up"></th:block>
 </div>
 <!-- end wrapper page -->
-<th:block th:replace="fragments/bundles/javascript :: login-scripts"></th:block>
+<th:block th:replace="fragments/bundles/javascript :: main"></th:block>
+<th:block th:replace="fragments/bundles/javascript :: app"></th:block>
 </body>
 </html>

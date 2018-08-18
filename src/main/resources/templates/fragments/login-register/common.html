@@ -1,0 +1,40 @@
+<!-- Logo in login, register and forgotten -->
+<th:block th:fragment="logo" xmlns:th="http://www.thymeleaf.org">
+    <div class="text-center">
+        <a href="/" class="logo"><span><span>Spring</span>Habit</span></a>
+        <h5 class="text-muted m-t-0 font-600">Gamify your tasks and habits</h5>
+    </div>
+</th:block>
+
+<!-- Sign in message below register form -->
+<th:block th:fragment="sign-in" xmlns:th="http://www.thymeleaf.org">
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <p class="text-muted">Already have account?<a href="/login" class="text-primary m-l-5"><b>Sign In</b></a>
+            </p>
+        </div>
+    </div>
+</th:block>
+
+<!-- Sign up message below login form -->
+<th:block th:fragment="sign-up" xmlns:th="http://www.thymeleaf.org">
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <p class="text-muted">Don't have an account? <a href="/register" class="text-primary m-l-5"><b>Sign
+                Up</b></a></p>
+        </div>
+    </div>
+</th:block>
+
+<!-- Terms and Conditions Checkbox -->
+<th:block th:fragment="terms" xmlns:th="http://www.thymeleaf.org">
+<div class="form-group">
+    <div class="col-xs-12">
+        <div class="checkbox checkbox-custom">
+            <input id="checkbox-signup" type="checkbox" checked="checked">
+            <label for="checkbox-signup">I accept <a href="#">Terms and Conditions</a></label>
+        </div>
+    </div>
+</div>
+</th:block>
+

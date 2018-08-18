@@ -1,4 +1,4 @@
-package org.rangelstoilov.model.view;
+package org.rangelstoilov.models.view;
 
 public class UserRegisterRequestModel {
 

@@ -19,7 +19,10 @@ public class ToDo {
     private String id;
 
     @Column(nullable = false)
-    private String descroption;
+    private String title;
+
+    @Column
+    private String notes;
 
     @Column
     private Date dueDate;
@@ -35,6 +38,11 @@ public class ToDo {
         this.createdOn = new Date();
     }
 
+    public ToDo(User user) {
+        this.createdOn = new Date();
+        this.user = user;
+    }
+
     public String getId() {
         return this.id;
     }
@@ -43,12 +51,20 @@ public class ToDo {
         this.id = id;
     }
 
-    public String getDescroption() {
-        return this.descroption;
+    public String getTitle() {
+        return this.title;
     }
 
-    public void setDescroption(String descroption) {
-        this.descroption = descroption;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getNotes() {
+        return this.notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Date getDueDate() {

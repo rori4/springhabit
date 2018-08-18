@@ -4,18 +4,13 @@
     <th:block th:replace="fragments/bundles/meta"></th:block>
     <!-- App title -->
     <title>Adminto - Responsive Admin Dashboard Template</title>
-    <th:block th:replace="fragments/bundles/css :: login-styles"></th:block>
-    =
+    <th:block th:replace="fragments/bundles/css :: main"></th:block>
 </head>
 <body>
-
 <div class="account-pages"></div>
 <div class="clearfix"></div>
 <div class="wrapper-page">
-    <div class="text-center">
-        <a href="/" class="logo"><span>Admin<span>to</span></span></a>
-        <h5 class="text-muted m-t-0 font-600">Responsive Admin Dashboard</h5>
-    </div>
+    <th:block th:replace="fragments/login-register/common :: logo"></th:block>
     <div class="m-t-40 card-box">
         <div class="text-center">
             <h4 class="text-uppercase font-bold m-b-0">Register</h4>
@@ -44,17 +39,6 @@
                     </div>
                 </div>
 
-                <!-- Terms and Conditions Checkbox -->
-
-                <!--<div class="form-group">-->
-                <!--<div class="col-xs-12">-->
-                <!--<div class="checkbox checkbox-custom">-->
-                <!--<input id="checkbox-signup" type="checkbox" checked="checked">-->
-                <!--<label for="checkbox-signup">I accept <a href="#">Terms and Conditions</a></label>-->
-                <!--</div>-->
-                <!--</div>-->
-                <!--</div>-->
-
                 <!-- CSRF Token -->
                 <input
                         type="hidden"
@@ -74,16 +58,10 @@
         </div>
     </div>
     <!-- end card-box -->
-
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <p class="text-muted">Already have account?<a href="/login" class="text-primary m-l-5"><b>Sign In</b></a>
-            </p>
-        </div>
-    </div>
-
+    <th:block th:replace="fragments/login-register/common :: sign-in"></th:block>
 </div>
 <!-- end wrapper page -->
-<th:block th:replace="fragments/bundles/javascript :: login-scripts"></th:block>
+<th:block th:replace="fragments/bundles/javascript :: main"></th:block>
+<th:block th:replace="fragments/bundles/javascript :: app"></th:block>
 </body>
 </html>

@@ -2,7 +2,7 @@ package org.rangelstoilov.services.user;
 
 import org.rangelstoilov.entities.Role;
 import org.rangelstoilov.entities.User;
-import org.rangelstoilov.model.view.UserRegisterRequestModel;
+import org.rangelstoilov.models.view.UserRegisterRequestModel;
 import org.rangelstoilov.repositories.RoleRepository;
 import org.rangelstoilov.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
+    //TODO: separate in own service
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -47,6 +48,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         this.roleRepository.save(role);
         return this.userRepository.save(user);
+    }
+
+    @Override
+    public User findUserEntityByEmail(String email) {
+        return this.userRepository.findFirstByEmail(email);
     }
 
     @Override

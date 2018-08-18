@@ -55,7 +55,7 @@ function offsetFromString(string) {
     return parts[0] === '+' ? minutes : -minutes;
 }
 
-// Return a moment from input, that is local/utc/zone equivalent to model.
+// Return a moment from input, that is local/utc/zone equivalent to models.
 export function cloneWithOffset(input, model) {
     var res, diff;
     if (model._isUTC) {

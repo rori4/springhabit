@@ -1,19 +1,36 @@
-<th:block th:fragment="login-scripts" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="main" xmlns:th="http://www.thymeleaf.org">
     <script>
         var resizefunc = [];
     </script>
     <!-- jQuery  -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/detect.js"></script>
-    <script src="assets/js/fastclick.js"></script>
-    <script src="assets/js/jquery.slimscroll.js"></script>
-    <script src="assets/js/jquery.blockUI.js"></script>
-    <script src="assets/js/waves.js"></script>
-    <script src="assets/js/wow.min.js"></script>
-    <script src="assets/js/jquery.nicescroll.js"></script>
-    <script src="assets/js/jquery.scrollTo.min.js"></script>
+    <script th:src="@{~/assets/js/jquery.min.js}"></script>
+    <script th:src="@{~/assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{~/assets/js/detect.js}"></script>
+    <script th:src="@{~/assets/js/fastclick.js}"></script>
+    <script th:src="@{~/assets/js/jquery.slimscroll.js}"></script>
+    <script th:src="@{~/assets/js/jquery.blockUI.js}"></script>
+    <script th:src="@{~/assets/js/waves.js}"></script>
+    <script th:src="@{~/assets/js/wow.min.js}"></script>
+    <script th:src="@{~/assets/js/jquery.nicescroll.js}"></script>
+    <script th:src="@{~/assets/js/jquery.scrollTo.min.js}"></script>
+</th:block>
+
+<th:block th:fragment="charts" xmlns:th="http://www.thymeleaf.org">
+    <!-- KNOB JS -->
+
+    <script th:src="@{~/assets/plugins/jquery-knob/excanvas.js}"></script>
+    <script th:src="@{~/assets/plugins/jquery-knob/jquery.knob.js}"></script>
+
+    <!--Morris Chart-->
+    <script th:src="@{~/assets/plugins/morris/morris.min.js}"></script>
+    <script th:src="@{~/assets/plugins/raphael/raphael-min.js}"></script>
+
+    <!-- Dashboard init -->
+    <script th:src="@{~/assets/pages/jquery.dashboard.js}"></script>
+</th:block>
+
+<th:block th:fragment="app" xmlns:th="http://www.thymeleaf.org">
     <!-- App js -->
-    <script src="assets/js/jquery.core.js"></script>
-    <script src="assets/js/jquery.app.js"></script>
+    <script th:src="@{~/assets/js/jquery.core.js}"></script>
+    <script th:src="@{~/assets/js/jquery.app.js}"></script>
 </th:block>
