@@ -15,6 +15,9 @@ public class ExceptionController extends BaseController {
     public ModelAndView handleError(HttpServletRequest request, Exception e)   {
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Request: " + request.getRequestURL() + " raised " + e);
         String status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE).toString();
+        if (status != null)
         return this.view("error","error", status);
+        else
+            return null;
     }
 }

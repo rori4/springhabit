@@ -17,8 +17,6 @@
 
 <th:block th:fragment="charts" xmlns:th="http://www.thymeleaf.org">
     <!-- KNOB JS -->
-
-    <script th:src="@{~/assets/plugins/jquery-knob/excanvas.js}"></script>
     <script th:src="@{~/assets/plugins/jquery-knob/jquery.knob.js}"></script>
 
     <!--Morris Chart-->
@@ -27,6 +25,12 @@
 
     <!-- Dashboard init -->
     <script th:src="@{~/assets/pages/jquery.dashboard.js}"></script>
+</th:block>
+
+<th:block th:fragment="modal" xmlns:th="http://www.thymeleaf.org">
+    <!-- Modal-Effect -->
+    <script th:src="@{~/assets/plugins/custombox/dist/custombox.min.js}"></script>
+    <script th:src="@{~/assets/plugins/custombox/dist/legacy.min.js}"></script>
 </th:block>
 
 <th:block th:fragment="app" xmlns:th="http://www.thymeleaf.org">

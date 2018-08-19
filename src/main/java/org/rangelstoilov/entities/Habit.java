@@ -1,7 +1,8 @@
 package org.rangelstoilov.entities;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.rangelstoilov.enums.Period;
+import org.rangelstoilov.custom.enums.Period;
+import org.rangelstoilov.custom.enums.Status;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -34,6 +35,10 @@ public class Habit {
     @Enumerated
     private Period resetPeriod;
 
+    @Column(nullable = false)
+    @Enumerated
+    private Status status;
+
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
@@ -41,6 +46,7 @@ public class Habit {
     public Habit() {
         this.createdOn = new Date();
         this.count = 0;
+        this.status = Status.ACTIVE;
     }
 
     public String getId() {
@@ -97,5 +103,13 @@ public class Habit {
 
     public void setResetPeriod(Period resetPeriod) {
         this.resetPeriod = resetPeriod;
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

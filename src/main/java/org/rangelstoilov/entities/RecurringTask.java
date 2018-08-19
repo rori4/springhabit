@@ -1,6 +1,7 @@
 package org.rangelstoilov.entities;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.rangelstoilov.custom.enums.Status;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,9 +30,19 @@ public class RecurringTask {
     @Column
     private Date createdOn;
 
+    @Column(nullable = false)
+    @Enumerated
+    private Status status;
+
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
+
+    public RecurringTask() {
+        this.count = 0;
+        this.createdOn = new Date();
+        this.status = Status.ACTIVE;
+    }
 
     public String getId() {
         return this.id;
@@ -79,5 +90,13 @@ public class RecurringTask {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

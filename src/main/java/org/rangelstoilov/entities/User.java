@@ -4,9 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -60,7 +58,7 @@ public class User {
     private List<Challenge> challengesJudging;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    private List<Role> roles;
 
 
     public User() {
@@ -74,7 +72,7 @@ public class User {
         this.challengesCreated = new ArrayList<>();
         this.challengesAccepted = new ArrayList<>();
         this.challengesJudging = new ArrayList<>();
-        this.roles = new HashSet<>();
+        this.roles = new ArrayList<>();
     }
 
     public String getId() {
@@ -189,11 +187,11 @@ public class User {
         this.gold = gold;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return this.roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 }

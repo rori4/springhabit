@@ -1,5 +1,6 @@
 package org.rangelstoilov.services.user;
 
+import org.rangelstoilov.custom.exceptions.EmailExistsException;
 import org.rangelstoilov.entities.Role;
 import org.rangelstoilov.entities.User;
 import org.rangelstoilov.models.view.UserRegisterRequestModel;
@@ -34,7 +35,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register(UserRegisterRequestModel model) {
+    public User register(UserRegisterRequestModel model) throws EmailExistsException {
+        if (emailExist(model.getEmail())) {
+            throw new EmailExistsException(
+                    "There is an account with that email address: "
+                            + model.getEmail());
+        }
         User user = new User();
         user.setEmail(model.getEmail());
         user.setName(model.getName());
@@ -69,5 +75,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
           roles
         );
         return userDetails;
+    }
+
+    private boolean emailExist(String email) {
+        User user = userRepository.findFirstByEmail(email);
+        return user != null;
     }
 }

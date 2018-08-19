@@ -1,6 +1,7 @@
 package org.rangelstoilov.entities;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.rangelstoilov.custom.enums.Status;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -34,12 +35,18 @@ public class ToDo {
     @JoinColumn (name="user_id",referencedColumnName="id",nullable=false,unique=true)
     private User user;
 
+    @Column(nullable = false)
+    @Enumerated
+    private Status status;
+
     public ToDo() {
         this.createdOn = new Date();
+        this.status = Status.ACTIVE;
     }
 
     public ToDo(User user) {
         this.createdOn = new Date();
+        this.status = Status.ACTIVE;
         this.user = user;
     }
 
@@ -89,5 +96,13 @@ public class ToDo {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

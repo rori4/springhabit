@@ -16,26 +16,33 @@
             <h4 class="text-uppercase font-bold m-b-0">Register</h4>
         </div>
         <div class="panel-body">
-            <form class="form-horizontal m-t-20" method="post">
 
+            <!--/*@thymesVar id="user" type="org.rangelstoilov.models.view.UserRegisterRequestModel"*/-->
+            <form class="form-horizontal m-t-20" method="post" th:object="${user}">
                 <div class="form-group ">
                     <div class="col-xs-12">
-                        <input class="form-control" type="email" name="email" id="email" required=""
+                        <input class="form-control" th:field="*{email}"  type="email" name="email" id="email"
                                placeholder="Email">
+                        <p th:each="error: ${#fields.errors('email')}"
+                           th:text="${error}">Validation error</p>
                     </div>
                 </div>
 
                 <div class="form-group ">
                     <div class="col-xs-12">
-                        <input class="form-control" type="text" required="" name="name" id="name"
+                        <input class="form-control" th:field="*{name}" type="text" name="name" id="name"
                                placeholder="Full Name">
+                        <p th:each="error: ${#fields.errors('name')}"
+                           th:text="${error}">Validation error</p>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control" type="password" required="" name="password" id="password"
+                        <input class="form-control" th:field="*{password}" type="password" name="password" id="password"
                                placeholder="Password">
+                        <p th:each="error: ${#fields.errors('password')}"
+                           th:text="${error}">Validation error</p>
                     </div>
                 </div>
 

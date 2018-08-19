@@ -1,4 +1,4 @@
-package org.rangelstoilov.controllers;
+package org.rangelstoilov.controllers.tests;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

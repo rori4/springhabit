@@ -1,8 +1,11 @@
 package org.rangelstoilov.entities;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.rangelstoilov.custom.enums.Status;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import java.util.Date;
 
 @Entity
 @Table(name = "challenges")
@@ -17,6 +20,7 @@ public class Challenge {
     private String id;
 
     @Column(nullable = false)
+    @Min(1)
     private Integer wager;
 
     @ManyToOne
@@ -30,6 +34,18 @@ public class Challenge {
     @ManyToOne
     @JoinColumn(name="judge_id", nullable=false)
     private User judge;
+
+    @Column
+    private Date createdOn;
+
+    @Column(nullable = false)
+    @Enumerated
+    private Status status;
+
+    public Challenge() {
+        this.createdOn = new Date();
+        this.status = Status.ACTIVE;
+    }
 
     public String getId() {
         return this.id;
@@ -69,5 +85,21 @@ public class Challenge {
 
     public void setWager(Integer wager) {
         this.wager = wager;
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Date getCreatedOn() {
+        return this.createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
     }
 }
