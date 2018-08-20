@@ -1,5 +1,6 @@
 package org.rangelstoilov.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -44,6 +45,7 @@ public class User {
 
     @Column
     private Integer gold;
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ToDo> todos;

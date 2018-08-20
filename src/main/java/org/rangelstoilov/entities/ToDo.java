@@ -1,5 +1,6 @@
 package org.rangelstoilov.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.rangelstoilov.custom.enums.Status;
 
@@ -31,6 +32,7 @@ public class ToDo {
     @Column
     private Date createdOn;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name="user_id",referencedColumnName="id",nullable=false)
     private User user;
