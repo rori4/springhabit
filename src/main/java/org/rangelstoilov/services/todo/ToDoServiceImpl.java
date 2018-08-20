@@ -29,11 +29,12 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    public void addToDo(ToDoModel toDoAddModel, String email) {
+    public boolean addToDo(ToDoModel toDoAddModel, String email) {
         User user = this.userRepository.findFirstByEmail(email);
         ToDo todo = this.modelMapper.map(toDoAddModel, ToDo.class);
         todo.setUser(user);
         this.toDoRepository.save(todo);
+        return true;
     }
 
     @Override

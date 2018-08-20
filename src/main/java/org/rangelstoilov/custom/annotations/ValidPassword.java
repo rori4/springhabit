@@ -1,6 +1,6 @@
 package org.rangelstoilov.custom.annotations;
 
-import org.rangelstoilov.custom.validators.PasswordConstraintValidator;
+import org.rangelstoilov.custom.annotations.validators.PasswordConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

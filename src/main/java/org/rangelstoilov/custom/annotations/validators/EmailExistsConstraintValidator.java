@@ -1,4 +1,4 @@
-package org.rangelstoilov.custom.validators;
+package org.rangelstoilov.custom.annotations.validators;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class EmailExistsConstraintValidator implements ConstraintValidator<EmailUnique, String> {
-   private Log log = LogFactory.getLog(org.rangelstoilov.custom.validators.EmailExistsConstraintValidator.class);
+   private Log log = LogFactory.getLog(org.rangelstoilov.custom.annotations.validators.EmailExistsConstraintValidator.class);
 
    @Autowired
    private UserService userService;

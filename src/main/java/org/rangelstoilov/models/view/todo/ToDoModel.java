@@ -1,14 +1,15 @@
 package org.rangelstoilov.models.view.todo;
 
-import org.rangelstoilov.custom.enums.Status;
 import org.rangelstoilov.entities.User;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class ToDoModel {
 
-    private String id;
-
+    @NotNull
+    @NotEmpty(message = "Title can not be empty")
     private String title;
 
     private String notes;
@@ -16,8 +17,6 @@ public class ToDoModel {
     private Date dueDate;
 
     private User user;
-
-    private Status status;
 
     public String getTitle() {
         return this.title;
@@ -51,19 +50,4 @@ public class ToDoModel {
         this.user = user;
     }
 
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Status getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

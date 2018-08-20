@@ -1,22 +1,18 @@
 $('#todo-submit').click(function (e) {
+    e.preventDefault();
     let title = $('#todo-title').val();
-    let note = $('#model').val();
-    let dueDate = $('#image').val();
-
+    let notes = $('#todo-notes').val();
+    let dueDate = $('#todo-due-date').val();
     $.ajax({
         type: 'POST',
-        url: 'http://127.0.0.1:8000/api/todo/add',
+        url: "/api/todo",
         data: {
             title: title,
-            note: note,
+            notes: notes,
             dueDate: dueDate
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            alert(xhr.responseText);
-            alert(thrownError);
         }
     }).done((data) => {
-        console.log(data);
+        alert(data);
     }).fail((err) => {
         console.log(err);
     });

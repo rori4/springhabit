@@ -1,4 +1,4 @@
-package org.rangelstoilov.custom.validators;
+package org.rangelstoilov.custom.annotations.validators;
 
 import org.passay.*;
 import org.passay.dictionary.WordListDictionary;

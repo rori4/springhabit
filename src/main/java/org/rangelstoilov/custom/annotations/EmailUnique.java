@@ -1,6 +1,6 @@
 package org.rangelstoilov.custom.annotations;
 
-import org.rangelstoilov.custom.validators.EmailExistsConstraintValidator;
+import org.rangelstoilov.custom.annotations.validators.EmailExistsConstraintValidator;
 
 import javax.validation.Constraint;
 import java.lang.annotation.*;

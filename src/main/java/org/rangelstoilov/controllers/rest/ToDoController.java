@@ -2,18 +2,22 @@ package org.rangelstoilov.controllers.rest;
 
 import com.google.gson.Gson;
 import org.rangelstoilov.custom.enums.Status;
+import org.rangelstoilov.custom.pojo.ValidationErrorBuilder;
 import org.rangelstoilov.models.view.todo.ToDoModel;
 import org.rangelstoilov.services.todo.ToDoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:8000")
 @PreAuthorize("isAuthenticated()")
 public class ToDoController {
     private final Gson gson;
@@ -33,9 +37,11 @@ public class ToDoController {
                 this.gson.toJson(result);
     }
 
-    @PostMapping(value = "/todo/add")
-    public boolean addToDo(@RequestBody ToDoModel todo, Principal principal) {
-        this.toDoService.addToDo(todo, principal.getName());
-        return true;
+    @PostMapping(value = "/todo")
+    public ResponseEntity<?> addToDo(@Valid @ModelAttribute ToDoModel toDoModel, Principal principal, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
+        }
+            return new ResponseEntity<>("Successfully created", HttpStatus.CREATED);
     }
 }

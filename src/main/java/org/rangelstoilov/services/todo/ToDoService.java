@@ -6,7 +6,7 @@ import org.rangelstoilov.models.view.todo.ToDoModel;
 import java.util.List;
 
 public interface ToDoService {
-    void addToDo(ToDoModel toDoAddModel, String username);
+    boolean addToDo(ToDoModel toDoAddModel, String username);
 
     List<ToDoModel> getAllToDos(Status status, String email);
 }

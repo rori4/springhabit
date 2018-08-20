@@ -32,7 +32,7 @@ public class ToDo {
     private Date createdOn;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn (name="user_id",referencedColumnName="id",nullable=false,unique=true)
+    @JoinColumn (name="user_id",referencedColumnName="id",nullable=false)
     private User user;
 
     @Column(nullable = false)
