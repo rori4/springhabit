@@ -9,6 +9,6 @@ public class SecurityController extends BaseController {
 
     @GetMapping("/login")
     public ModelAndView login() {
-        return  this.view("/users/login");
+        return this.view("/users/login");
     }
 }

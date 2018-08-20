@@ -21,6 +21,11 @@ public class Role {
         this.users = new HashSet<>();
     }
 
+    public Role(String name) {
+        this.name = name;
+        this.users = new HashSet<>();
+    }
+
     public Long getId() {
         return this.id;
     }

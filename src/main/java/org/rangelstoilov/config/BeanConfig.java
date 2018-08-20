@@ -1,5 +1,6 @@
 package org.rangelstoilov.config;
 
+import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,4 +18,7 @@ public class BeanConfig {
     public ModelMapper getModelMapper() {
         return new ModelMapper();
     }
+
+    @Bean
+    public Gson gson() { return new Gson(); }
 }

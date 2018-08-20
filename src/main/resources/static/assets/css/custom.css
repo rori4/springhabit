@@ -1,0 +1,7 @@
+.modal-max-length-fix {
+    z-index: 20000 !important;
+}
+
+.no-resize {
+    resize: none;
+}

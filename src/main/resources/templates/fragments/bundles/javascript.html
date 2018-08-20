@@ -23,14 +23,68 @@
     <script th:src="@{~/assets/plugins/morris/morris.min.js}"></script>
     <script th:src="@{~/assets/plugins/raphael/raphael-min.js}"></script>
 
+    <!-- Circliful -->
+    <script th:src="@{~/assets/plugins/jquery-circliful/js/jquery.circliful.min.js}"></script>
+
     <!-- Dashboard init -->
-    <script th:src="@{~/assets/pages/jquery.dashboard.js}"></script>
+    <!--<script th:src="@{~/assets/pages/jquery.dashboard.js}"></script>-->
 </th:block>
 
-<th:block th:fragment="modal" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="custombox" xmlns:th="http://www.thymeleaf.org">
     <!-- Modal-Effect -->
     <script th:src="@{~/assets/plugins/custombox/dist/custombox.min.js}"></script>
     <script th:src="@{~/assets/plugins/custombox/dist/legacy.min.js}"></script>
+</th:block>
+
+<th:block th:fragment="form-control" xmlns:th="http://www.thymeleaf.org">
+    <!-- Plugins js -->
+    <script th:src="@{~/assets/plugins/moment/moment.js}"></script>
+    <script th:src="@{~/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+    <script th:src="@{~/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js}"></script>
+    <script>
+        jQuery(document).ready(function() {
+            $('.datepicker-autoclose').datepicker({
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            $('.show-max-length').maxlength({
+                alwaysShow: true,
+                warningClass: "label label-info modal-max-length-fix",
+                limitReachedClass: "label label-warning modal-max-length-fix"
+            });
+
+        });
+    </script>
+</th:block>
+
+<th:block th:fragment="dragula" xmlns:th="http://www.thymeleaf.org">
+    <!-- drgula (Drag and drop) js -->
+    <script th:src="@{~/assets/plugins/dragula/dragula.min.js}"></script>
+    <script>
+        dragula([document.querySelector('#drag-upcoming'), document.querySelector('#drag-inprogress'), document.querySelector('#drag-complete')], {
+            isContainer: function (el) {
+                return false; // only elements in drake.containers will be taken into account
+            },
+            moves: function (el, source, handle, sibling) {
+                return true; // elements are always draggable by default
+            },
+            accepts: function (el, target, source, sibling) {
+                return true; // elements can be dropped in any of the `containers` by default
+            },
+            invalid: function (el, handle) {
+                return false; // don't prevent any drags from initiating by default
+            },
+            direction: 'vertical',             // Y axis is considered when determining where an element would be dropped
+            copy: false,                       // elements are moved by default, not copied
+            copySortSource: false,             // elements in copy-source containers can be reordered
+            revertOnSpill: false,              // spilling will put the element back where it was dragged from, if this is true
+            removeOnSpill: false,              // spilling will `.remove` the element, if this is true
+            mirrorContainer: document.body,    // set the element that gets mirror elements appended
+            ignoreInputTextSelection: true     // allows users to select input text, see details below
+        });
+
+    </script>
 </th:block>
 
 <th:block th:fragment="app" xmlns:th="http://www.thymeleaf.org">

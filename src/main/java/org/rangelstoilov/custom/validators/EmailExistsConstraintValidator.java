@@ -23,8 +23,8 @@ public class EmailExistsConstraintValidator implements ConstraintValidator<Email
    @Override
    public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
       try {
-         Object user = userService.findUserEntityByEmail(email);
-         if (user != null) {
+
+         if (userService.userExists(email)) {
             return false;
          }
       } catch (Exception e) {

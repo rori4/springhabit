@@ -4,17 +4,15 @@
         <th:block th:replace="fragments/bundles/meta"></th:block>
         <!-- App title -->
         <title>SpringHabit - Responsive Admin Dashboard Template</title>
-        <!-- Custom box (Modal) css -->
-        <link th:href="@{~/assets/plugins/custombox/dist/custombox.min.css}" rel="stylesheet">
-        <!-- Dragula (Drag and drop) css -->
-        <link th:href="@{~/assets/plugins/dragula/dragula.min.css}" rel="stylesheet">
 
+        <th:block th:replace="fragments/bundles/css :: plugins"></th:block>
         <th:block th:replace="fragments/bundles/css :: charts"></th:block>
         <th:block th:replace="fragments/bundles/css :: main"></th:block>
     </head>
     <body class="fixed-left">
 
         <!-- Begin page -->
+        <!--/*@thymesVar id="user" type="org.rangelstoilov.models.view.user.UserDashboardViewModel"*/-->
         <div id="wrapper">
             <th:block th:replace="fragments/common/topbar"></th:block>
             <th:block th:replace="fragments/common/left-sidebar"></th:block>
@@ -28,9 +26,7 @@
                     <div class="container">
                         <th:block th:replace="fragments/dashboard/stats"></th:block>
                         <th:block th:replace="fragments/dashboard/tasks"></th:block>
-                        <th:block th:replace="fragments/common/modal"></th:block>
-
-
+                        <th:block th:replace="fragments/modals/todo-modal"></th:block>
                     </div> <!-- container -->
 
                 </div> <!-- content -->
@@ -42,7 +38,9 @@
         </div>
         <th:block th:replace="fragments/bundles/javascript :: main"></th:block>
         <th:block th:replace="fragments/bundles/javascript :: charts"></th:block>
-        <th:block th:replace="fragments/bundles/javascript :: modal"></th:block>
+        <th:block th:replace="fragments/bundles/javascript :: form-control"></th:block>
         <th:block th:replace="fragments/bundles/javascript :: app"></th:block>
+        <th:block th:replace="fragments/bundles/javascript :: custombox"></th:block>
+        <script th:src="@{~/assets/pages/jquery.dashboard.todos.js}"></script>
     </body>
 </html>

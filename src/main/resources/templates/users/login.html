@@ -16,6 +16,8 @@
             <h4 class="text-uppercase font-bold m-b-0">Sign In</h4>
         </div>
         <div class="panel-body">
+            <!--/*@thymesVar id="loginError" type="java"*/-->
+            <p th:if="${(param.error != null) and (param.error[0] == 'true')}" class="error text-center">Wrong email or password</p>
             <form class="form-horizontal m-t-20" method="post">
 
                 <div class="form-group ">

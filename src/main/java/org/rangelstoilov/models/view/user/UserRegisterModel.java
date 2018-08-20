@@ -1,14 +1,14 @@
-package org.rangelstoilov.models.view;
+package org.rangelstoilov.models.view.user;
 
 
 import org.rangelstoilov.custom.annotations.EmailUnique;
 import org.rangelstoilov.custom.annotations.ValidEmail;
+import org.rangelstoilov.custom.annotations.ValidPassword;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
-public class UserRegisterRequestModel {
+public class UserRegisterModel {
 
     @NotNull(message = "Please provide an email")
     @NotEmpty(message = "Email can not be empty")
@@ -22,7 +22,7 @@ public class UserRegisterRequestModel {
 
     @NotNull
     @NotEmpty
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password must contain ....")
+    @ValidPassword(message = "Password must be valid")
     private String password;
 
     public String getEmail() {

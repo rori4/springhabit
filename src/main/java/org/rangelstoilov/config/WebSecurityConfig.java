@@ -33,6 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login").permitAll()
                     .passwordParameter("password")
                     .usernameParameter("email")
+                .failureUrl("/login?error=true")
         .and().userDetailsService(this.userDetailsService);
     }
 }

@@ -1,11 +1,12 @@
 package org.rangelstoilov.services.user;
 
-import org.rangelstoilov.custom.exceptions.EmailExistsException;
+import org.modelmapper.ModelMapper;
 import org.rangelstoilov.entities.Role;
 import org.rangelstoilov.entities.User;
-import org.rangelstoilov.models.view.UserRegisterRequestModel;
-import org.rangelstoilov.repositories.RoleRepository;
+import org.rangelstoilov.models.view.user.UserDashboardViewModel;
+import org.rangelstoilov.models.view.user.UserRegisterModel;
 import org.rangelstoilov.repositories.UserRepository;
+import org.rangelstoilov.services.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,42 +24,46 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
-    //TODO: separate in own service
-    private final RoleRepository roleRepository;
+
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public User register(UserRegisterRequestModel model) throws EmailExistsException {
-        if (emailExist(model.getEmail())) {
-            throw new EmailExistsException(
-                    "There is an account with that email address: "
-                            + model.getEmail());
-        }
-        User user = new User();
-        user.setEmail(model.getEmail());
-        user.setName(model.getName());
+    public boolean register(UserRegisterModel userViewModel) {
+        User user = this.modelMapper.map(userViewModel, User.class);
         user.setPassword(
-                this.passwordEncoder.encode(model.getPassword())
+                this.passwordEncoder.encode(userViewModel.getPassword())
         );
-
-        Role role = this.roleRepository.findFirstByName("USER");
+        this.roleService.addUserAndAdminRoleIfNotExistant();
+        Role role = this.roleService.findFirstByName("USER");
         role.getUsers().add(user);
         user.getRoles().add(role);
 
-        this.roleRepository.save(role);
-        return this.userRepository.save(user);
+        this.roleService.addRole(role);
+        this.userRepository.save(user);
+        return true;
     }
 
+
+
     @Override
-    public User findUserEntityByEmail(String email) {
-        return this.userRepository.findFirstByEmail(email);
+    public boolean userExists(String email) {
+        return this.userRepository.findFirstByEmail(email) != null;
+    }
+
+
+    @Override
+    public UserDashboardViewModel getUserDashboardDataByEmail(String email) {
+        return modelMapper.map(userRepository.findFirstByEmail(email),UserDashboardViewModel.class);
     }
 
     @Override
@@ -77,8 +82,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userDetails;
     }
 
-    private boolean emailExist(String email) {
-        User user = userRepository.findFirstByEmail(email);
-        return user != null;
-    }
+
 }

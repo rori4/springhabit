@@ -31,10 +31,16 @@ public class User {
     private Integer level;
 
     @Column
+    private Integer nextLevelExp;
+
+    @Column
     private Integer experience;
 
     @Column
     private  Integer health;
+
+    @Column
+    private Integer maxHealth;
 
     @Column
     private Integer gold;
@@ -62,6 +68,8 @@ public class User {
 
 
     public User() {
+        this.nextLevelExp = 500;
+        this.maxHealth = 100;
         this.level = 1;
         this.experience = 0;
         this.health = 100;
@@ -193,5 +201,21 @@ public class User {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public Integer getMaxHealth() {
+        return this.maxHealth;
+    }
+
+    public void setMaxHealth(Integer maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public Integer getNextLevelExp() {
+        return this.nextLevelExp;
+    }
+
+    public void setNextLevelExp(Integer nextLevelExp) {
+        this.nextLevelExp = nextLevelExp;
     }
 }
