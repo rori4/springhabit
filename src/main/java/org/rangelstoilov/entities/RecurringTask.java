@@ -1,6 +1,7 @@
 package org.rangelstoilov.entities;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.rangelstoilov.custom.enums.Period;
 import org.rangelstoilov.custom.enums.Status;
 
 import javax.persistence.*;
@@ -33,6 +34,10 @@ public class RecurringTask {
     @Column(nullable = false)
     @Enumerated
     private Status status;
+
+    @Column(nullable = false)
+    @Enumerated
+    private Period resetPeriod;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
@@ -98,5 +103,13 @@ public class RecurringTask {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Period getResetPeriod() {
+        return this.resetPeriod;
+    }
+
+    public void setResetPeriod(Period resetPeriod) {
+        this.resetPeriod = resetPeriod;
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -46,6 +47,7 @@ public class ToDoServiceImpl implements ToDoService {
             fixOrderOfElements(orderNumber);
             toDoById.setOrderNumber(this.toDoRepository.countAllByUserAndStatus(user,Status.DONE)+1);
             toDoById.setStatus(Status.DONE);
+            toDoById.setCompletedOn(new Date());
             this.toDoRepository.save(toDoById);
             //TODO: handle user level up, experience and rewards and fights
             return true;

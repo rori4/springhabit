@@ -1,5 +1,5 @@
 let todo = (() => {
-    function init() {
+    function prepareModalAndLoad() {
         preloadAllToDoTaks();
         $('#todo-submit').click(function (e) {
             let prefix = "todo-";
@@ -81,11 +81,11 @@ let todo = (() => {
     }
 
     return {
-        init,
+        prepareModalAndLoad,
         preloadAllToDoTaks,
         removeErrors,
     }
 
 })();
 
-todo.init();
+todo.prepareModalAndLoad();

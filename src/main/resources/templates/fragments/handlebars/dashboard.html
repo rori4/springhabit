@@ -46,11 +46,45 @@
 
 <th:block th:fragment="habit" xmlns:th="http://www.thymeleaf.org">
     <script id="habit-template" type="text/x-handlebars-template">
-        <li>
+        <li id="habit-{{id}}">
+            <div class="card-box kanban-box wrap-long-word">
+                <div class="row">
+                    <button class="btn btn-icon btn-sm waves-effect waves-light btn-danger m-b-5 pull-left col-md-12 col-xs-12 col-lg-1"><i
+                            class="fa fa-minus"></i></button>
+
+                    <div class="kanban-detail kanban-rml col-lg-6 col-md-12 col-xs-12">
+                        <h4><a href="">{{title}}</a></h4>
+                        <p><a href="">{{notes}}</a></p>
+                        <ul class="list-inline m-b-0">
+                            <li>
+                                <a href="" data-toggle="tooltip" data-placement="top"
+                                   title="" data-original-title="5 Attachments">
+                                    <i class="zmdi zmdi-chart"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="" data-toggle="tooltip" data-placement="top"
+                                   title="" data-original-title="Archive Habit">
+                                    <i class="zmdi zmdi-delete"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-icon btn-sm waves-effect waves-light btn-success m-b-5 col-md-12 col-xs-12 col-lg-1 pull-right">
+                        <i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+        </li>
+    </script>
+</th:block>
+
+<th:block th:fragment="recurring" xmlns:th="http://www.thymeleaf.org">
+    <script id="recurring-template" type="text/x-handlebars-template">
+        <li id="recurring-{{id}}">
             <div class="card-box kanban-box wrap-long-word">
                 <div class="checkbox-wrapper">
                     <div class="checkbox checkbox-success checkbox-single">
-                        <input type="checkbox" id="singleCheckbox2" value="option2"
+                        <input type="checkbox" id="{{id}}" value="option2"
                                aria-label="Single checkbox Two">
                         <label></label>
                     </div>
@@ -73,6 +107,7 @@
                                 <i class="zmdi zmdi-archive"></i>
                             </a>
                         </li>
+                        <span class="label label-primary">{{resetPeriod}}</span>
                     </ul>
                 </div>
             </div>

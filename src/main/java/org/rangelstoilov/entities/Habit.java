@@ -1,11 +1,11 @@
 package org.rangelstoilov.entities;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.rangelstoilov.custom.enums.Period;
 import org.rangelstoilov.custom.enums.Status;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "habits")
@@ -33,15 +33,17 @@ public class Habit {
 
     @Column(nullable = false)
     @Enumerated
-    private Period resetPeriod;
-
-    @Column(nullable = false)
-    @Enumerated
     private Status status;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
+
+    @OneToMany(mappedBy = "habit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<HabitStats> habitStats;
+
+    @Column(nullable = false)
+    private Integer orderNumber;
 
     public Habit() {
         this.createdOn = new Date();
@@ -97,19 +99,27 @@ public class Habit {
         this.user = user;
     }
 
-    public Period getResetPeriod() {
-        return this.resetPeriod;
-    }
-
-    public void setResetPeriod(Period resetPeriod) {
-        this.resetPeriod = resetPeriod;
-    }
-
     public Status getStatus() {
         return this.status;
     }
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Integer getOrderNumber() {
+        return this.orderNumber;
+    }
+
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public List<HabitStats> getHabitStats() {
+        return this.habitStats;
+    }
+
+    public void setHabitStats(List<HabitStats> habitStats) {
+        this.habitStats = habitStats;
     }
 }

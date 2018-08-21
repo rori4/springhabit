@@ -32,6 +32,9 @@ public class ToDo {
     @Column
     private Date createdOn;
 
+    @Column
+    private Date completedOn;
+
     @Column(nullable = false)
     private Integer orderNumber;
 
@@ -118,5 +121,13 @@ public class ToDo {
 
     public void setOrderNumber(Integer orderNumber) {
         this.orderNumber = orderNumber;
+    }
+
+    public Date getCompletedOn() {
+        return this.completedOn;
+    }
+
+    public void setCompletedOn(Date completedOn) {
+        this.completedOn = completedOn;
     }
 }

@@ -25,6 +25,7 @@
                         <th:block th:replace="fragments/dashboard/stats"></th:block>
                         <th:block th:replace="fragments/dashboard/tasks"></th:block>
                         <th:block th:replace="fragments/modals/todo-modal"></th:block>
+                        <th:block th:replace="fragments/modals/habit-modal"></th:block>
                     </div> <!-- container -->
                 </div> <!-- content -->
                 <th:block th:replace="fragments/common/footer"></th:block>
@@ -40,5 +41,7 @@
         <!-- Ajax calls and dynamic templates -->
         <th:block th:replace="fragments/handlebars/dashboard"></th:block>
         <script th:src="@{~/assets/pages/jquery.dashboard.todos.js}"></script>
+        <script th:src="@{~/assets/pages/jquery.dashboard.habits.js}"></script>
+        <script th:src="@{~/assets/pages/jquery.dashboard.recurring.js}"></script>
     </body>
 </html>

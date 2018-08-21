@@ -9,3 +9,11 @@
 .wrap-long-word {
     word-wrap:break-word;
 }
+
+.margin-left-60 {
+    margin-left: 60px;
+}
+
+.kanban-rml {
+    margin-left: 0 !important;
+}
