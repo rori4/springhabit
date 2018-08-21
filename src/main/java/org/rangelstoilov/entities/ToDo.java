@@ -32,6 +32,9 @@ public class ToDo {
     @Column
     private Date createdOn;
 
+    @Column(nullable = false)
+    private Integer orderNumber;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name="user_id",referencedColumnName="id",nullable=false)
@@ -46,10 +49,11 @@ public class ToDo {
         this.status = Status.ACTIVE;
     }
 
-    public ToDo(User user) {
+    public ToDo(User user, Integer orderNumber) {
         this.createdOn = new Date();
         this.status = Status.ACTIVE;
         this.user = user;
+        this.orderNumber = orderNumber;
     }
 
     public String getId() {
@@ -106,5 +110,13 @@ public class ToDo {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Integer getOrderNumber() {
+        return this.orderNumber;
+    }
+
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
     }
 }

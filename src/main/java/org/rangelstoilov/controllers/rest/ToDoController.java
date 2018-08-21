@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -33,6 +34,7 @@ public class ToDoController {
     public @ResponseBody
     String profile(Principal principal) {
         List<ToDoModel> result = this.toDoService.getAllToDos(Status.ACTIVE, principal.getName());
+        result.sort(Comparator.comparing(ToDoModel::getOrderNumber));
         return
                 this.gson.toJson(result);
     }
@@ -42,6 +44,19 @@ public class ToDoController {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
         }
-            return new ResponseEntity<>("Successfully created", HttpStatus.CREATED);
+        ToDoModel result = this.toDoService.add(toDoModel, principal.getName());
+        if (result != null){
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/todo/done")
+    public ResponseEntity<?> markDone(@RequestParam String id, Principal principal){
+        boolean result = this.toDoService.markDone(id, principal.getName());
+        if(result){
+            return new ResponseEntity<>("Task marked done successfully", HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
     }
 }

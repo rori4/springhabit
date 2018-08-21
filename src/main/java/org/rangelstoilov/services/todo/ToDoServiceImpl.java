@@ -29,20 +29,46 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    public boolean addToDo(ToDoModel toDoAddModel, String email) {
-        User user = this.userRepository.findFirstByEmail(email);
+    public ToDoModel add(ToDoModel toDoAddModel, String userEmail) {
+        User user = this.userRepository.findFirstByEmail(userEmail);
         ToDo todo = this.modelMapper.map(toDoAddModel, ToDo.class);
         todo.setUser(user);
-        this.toDoRepository.save(todo);
-        return true;
+        todo.setOrderNumber(this.toDoRepository.countAllByUserAndStatus(user,Status.ACTIVE)+1);
+        return this.modelMapper.map(this.toDoRepository.save(todo),ToDoModel.class);
     }
 
     @Override
-    public List<ToDoModel> getAllToDos(Status status,String userEmail) {
+    public boolean markDone(String id, String userEmail) {
+        ToDo toDoById = this.toDoRepository.findToDoById(id);
+        User user = this.userRepository.findFirstByEmail(userEmail);
+        if(toDoById.getUser().getId().equals(user.getId())){
+            Integer orderNumber = toDoById.getOrderNumber();
+            fixOrderOfElements(orderNumber);
+            toDoById.setOrderNumber(this.toDoRepository.countAllByUserAndStatus(user,Status.DONE)+1);
+            toDoById.setStatus(Status.DONE);
+            this.toDoRepository.save(toDoById);
+            //TODO: handle user level up, experience and rewards and fights
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public List<ToDoModel> getAllToDos(Status status, String userEmail) {
         User firstByEmail = userRepository.findFirstByEmail(userEmail);
         List<ToDo> userToDos = this.toDoRepository.findAllByStatusAndUser(status,firstByEmail);
         java.lang.reflect.Type targetListType = new TypeToken<List<ToDoModel>>() {}.getType();
         return this.modelMapper.map(userToDos, targetListType);
+    }
+
+    private void fixOrderOfElements(Integer orderNumber) {
+        List<ToDo> allByOrderNumberGreaterThan = this.toDoRepository.findAllByOrderNumberGreaterThan(orderNumber);
+        if (!allByOrderNumberGreaterThan.isEmpty()){
+            for (ToDo element : allByOrderNumberGreaterThan) {
+                element.setOrderNumber(element.getOrderNumber()-1);
+            }
+        }
     }
 
 }

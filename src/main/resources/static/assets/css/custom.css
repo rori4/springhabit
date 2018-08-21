@@ -5,3 +5,7 @@
 .no-resize {
     resize: none;
 }
+
+.wrap-long-word {
+    word-wrap:break-word;
+}
