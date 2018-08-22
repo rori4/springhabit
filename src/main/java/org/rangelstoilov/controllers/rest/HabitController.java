@@ -38,7 +38,7 @@ public class HabitController {
                 this.gson.toJson(result);
     }
 
-    @PostMapping(value = "/habit", produces={"application/json; charset=UTF-8"})
+    @PostMapping(value = "/habit", produces={"application/json"})
     public ResponseEntity<?> addHabit(@Valid @ModelAttribute HabitModel habitModel, Principal principal, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
@@ -46,6 +46,24 @@ public class HabitController {
         HabitModel result = this.habitService.add(habitModel, principal.getName());
         if (result != null){
             return new ResponseEntity<>(result, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/habit/plus")
+    public ResponseEntity<?> markPlus(@RequestParam String id, Principal principal){
+        boolean result = this.habitService.markPlus(id, principal.getName());
+        if(result){
+            return new ResponseEntity<>("Habit stats added marked with plus", HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(value = "/habit/minus")
+    public ResponseEntity<?> markMinus(@RequestParam String id, Principal principal){
+        boolean result = this.habitService.markMinus(id, principal.getName());
+        if(result){
+            return new ResponseEntity<>("Habit stats added marked with minus", HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
     }

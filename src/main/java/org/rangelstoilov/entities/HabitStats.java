@@ -20,7 +20,7 @@ public class HabitStats {
     private Integer result;
 
     @ManyToOne
-    @JoinColumn(name="habit_id", nullable=false)
+    @JoinColumn (name="habit_id",referencedColumnName="id", nullable = false)
     private Habit habit;
 
     @Column
@@ -30,8 +30,9 @@ public class HabitStats {
         this.createdOn = new Date();
     }
 
-    public HabitStats(Integer result) {
+    public HabitStats(Habit habit, Integer result) {
         this.createdOn = new Date();
+        this.habit = habit;
         this.result = result;
     }
 

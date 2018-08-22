@@ -45,16 +45,40 @@ let habits = (() => {
             $.each(JSON.parse(data), function (index, value) {
                 prependOnHabitBoard(value);
             });
-            addPlusClickEvents();
+            addButtonsClickEvents();
         }).fail((err) => {
             console.log(err);
         });
     }
 
-    function addPlusClickEvents() {
-        $("#habit-list button.btn-danger").change(function (el) {
-                let id = el.target.id;
+    function addButtonsClickEvents() {
+        $("#habit-list button").click(function (el) {
+            let id = $(el.target).parent().attr('id');
+            if($(el.target).hasClass('btn-danger')){
+                console.log("clicked on minus");
                 console.log(id);
+                $.ajax({
+                    type: 'POST',
+                    url: "/api/habit/minus?id="+id,
+                }).done((data) => {
+                    console.log(data)
+                }).fail((err) => {
+                    //Add notify in corner
+                    console.log(err);
+                });
+            } else if($(el.target).hasClass('btn-success')){
+                console.log("clicked on plus");
+                console.log(id);
+                $.ajax({
+                    type: 'POST',
+                    url: "/api/habit/plus?id="+id,
+                }).done((data) => {
+                    console.log(data)
+                }).fail((err) => {
+                    //Add notify in corner
+                    console.log(err);
+                });
+            }
         });
     }
 

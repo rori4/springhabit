@@ -1,4 +1,5 @@
 let todo = (() => {
+
     function prepareModalAndLoad() {
         preloadAllToDoTaks();
         $('#todo-submit').click(function (e) {

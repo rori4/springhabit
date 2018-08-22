@@ -87,7 +87,7 @@ public class HabitServiceImpl implements HabitService {
 
     private boolean performCheckAndAddStats(Habit habitById, User user, Integer result) {
         if (habitById.getUser().getId().equals(user.getId())) {
-            HabitStats habitStats = new HabitStats(result);
+            HabitStats habitStats = new HabitStats(habitById,result);
             List<HabitStats> prevStats = habitById.getHabitStats();
             if (prevStats.add(habitStats)) {
                 habitById.setHabitStats(prevStats);

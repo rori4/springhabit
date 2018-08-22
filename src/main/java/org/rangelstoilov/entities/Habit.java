@@ -1,9 +1,12 @@
 package org.rangelstoilov.entities;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.rangelstoilov.custom.enums.Status;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +42,8 @@ public class Habit {
     @JoinColumn(name="user_id", nullable=false)
     private User user;
 
-    @OneToMany(mappedBy = "habit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "habit", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<HabitStats> habitStats;
 
     @Column(nullable = false)
@@ -49,6 +53,7 @@ public class Habit {
         this.createdOn = new Date();
         this.count = 0;
         this.status = Status.ACTIVE;
+        this.habitStats = new ArrayList<>();
     }
 
     public String getId() {
