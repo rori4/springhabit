@@ -5,6 +5,7 @@ import org.rangelstoilov.entities.Role;
 import org.rangelstoilov.entities.User;
 import org.rangelstoilov.models.view.user.UserDashboardViewModel;
 import org.rangelstoilov.models.view.user.UserRegisterModel;
+import org.rangelstoilov.models.view.user.UserRewardModel;
 import org.rangelstoilov.repositories.UserRepository;
 import org.rangelstoilov.services.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
+    private static final int BASE_REWARD_MULTIPLIER = 100;
     private final UserRepository userRepository;
 
     private final RoleService roleService;
@@ -82,5 +84,36 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userDetails;
     }
 
+    @Override
+    public UserRewardModel rewardUserForTaskDone(String email, Integer streakMultiplier){
+        UserRewardModel userRewardModel = new UserRewardModel();
+        User user = this.userRepository.findFirstByEmail(email);
+
+        //This will determine the exp reward multiplier
+        Integer rewardMultiplier = BASE_REWARD_MULTIPLIER*user.getLevel();
+
+        //Possible rewards
+        Integer exp = rewardMultiplier*streakMultiplier;
+        Integer gold = rewardMultiplier/2*streakMultiplier;
+        Integer health = user.getMaxHealth()*2;
+
+        //Setting the user reward model values
+        userRewardModel.setExperience(exp);
+        userRewardModel.setGold(gold);
+
+        //Setting user entity valus
+        user.setExperience(user.getExperience()+exp);
+        user.setGold(user.getGold()+gold);
+
+        //When leveling up
+        if(user.getExperience()+exp >= user.getNextLevelExp()){
+            userRewardModel.setLevel(1);
+            userRewardModel.setHealth(health);
+            user.setMaxHealth(health);
+            user.levelUp();
+        }
+        this.userRepository.save(user);
+        return userRewardModel;
+    }
 
 }

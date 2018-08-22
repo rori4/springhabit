@@ -61,6 +61,7 @@ let todo = (() => {
                     url: "/api/todo/done?id="+id,
                 }).done((data) => {
                     $('#todo-'+id).fadeOut();
+                    noty.handleData(data);
                     console.log(data)
                 }).fail((err) => {
                     //Add notify in corner

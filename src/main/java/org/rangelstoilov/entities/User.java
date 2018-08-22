@@ -1,6 +1,5 @@
 package org.rangelstoilov.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,6 +9,13 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User {
+    public static final int BASE_NEXT_LEVEL_EXP = 500;
+    public static final int BASE_MAX_HEALTH = 100;
+    public static final int BASE_START_LEVEL = 1;
+    public static final int BASE_EXPERIENCE = 0;
+    public static final int BASE_HEALTH = 100;
+    public static final int BASE_GOLD = 0;
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -30,9 +36,6 @@ public class User {
 
     @Column
     private Integer level;
-
-    @Column
-    private Integer nextLevelExp;
 
     @Column
     private Integer experience;
@@ -70,12 +73,11 @@ public class User {
 
 
     public User() {
-        this.nextLevelExp = 500;
-        this.maxHealth = 100;
-        this.level = 1;
-        this.experience = 0;
-        this.health = 100;
-        this.gold = 0;
+        this.maxHealth = BASE_MAX_HEALTH;
+        this.level = BASE_START_LEVEL;
+        this.experience = BASE_EXPERIENCE;
+        this.health = BASE_HEALTH;
+        this.gold = BASE_GOLD;
         this.todos = new ArrayList<>();
         this.recurringTasks = new ArrayList<>();
         this.habits = new ArrayList<>();
@@ -213,11 +215,12 @@ public class User {
         this.maxHealth = maxHealth;
     }
 
-    public Integer getNextLevelExp() {
-        return this.nextLevelExp;
+    public void levelUp() {
+        this.setLevel(this.getLevel()+1);
+        this.setHealth(this.getMaxHealth());
     }
 
-    public void setNextLevelExp(Integer nextLevelExp) {
-        this.nextLevelExp = nextLevelExp;
+    public int getNextLevelExp(){
+        return (int) Math.pow(this.getLevel(),2)*User.BASE_NEXT_LEVEL_EXP;
     }
 }

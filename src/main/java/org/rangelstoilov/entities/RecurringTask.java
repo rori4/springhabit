@@ -43,6 +43,9 @@ public class RecurringTask {
     @JoinColumn(name="user_id", nullable=false)
     private User user;
 
+    @Column(nullable = false)
+    private Integer orderNumber;
+
     public RecurringTask() {
         this.count = 0;
         this.createdOn = new Date();
@@ -111,5 +114,13 @@ public class RecurringTask {
 
     public void setResetPeriod(Period resetPeriod) {
         this.resetPeriod = resetPeriod;
+    }
+
+    public Integer getOrderNumber() {
+        return this.orderNumber;
+    }
+
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
     }
 }

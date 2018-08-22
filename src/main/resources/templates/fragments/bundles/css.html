@@ -20,6 +20,9 @@
 </th:block>
 
 <th:block th:fragment="plugins" xmlns:th="http://www.thymeleaf.org">
+    <link th:href="@{~/assets/plugins/multiselect/css/multi-select.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{~/assets/plugins/select2/dist/css/select2.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{~/assets/plugins/select2/dist/css/select2-bootstrap.css}" rel="stylesheet" type="text/css">
     <!-- Plugins css-->
     <link th:href="@{~/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" rel="stylesheet">
     <!-- Circlifull chart css -->
@@ -30,6 +33,9 @@
     <link th:href="@{~/assets/plugins/custombox/dist/custombox.min.css}" rel="stylesheet">
     <!-- Dragula (Drag and drop) css -->
     <link th:href="@{~/assets/plugins/dragula/dragula.min.css}" rel="stylesheet">
+    <!--Noty Css -->
+    <link th:href="@{~/assets/plugins/notyjs/noty.css}" rel="stylesheet">
+    <link th:href="@{~/assets/plugins/notyjs/themes/mint.css}" rel="stylesheet">
 </th:block>
 
 <th:block th:fragment="charts" xmlns:th="http://www.thymeleaf.org">

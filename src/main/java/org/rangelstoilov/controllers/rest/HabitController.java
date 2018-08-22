@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import org.rangelstoilov.custom.enums.Status;
 import org.rangelstoilov.custom.pojo.ValidationErrorBuilder;
 import org.rangelstoilov.models.view.habit.HabitModel;
+import org.rangelstoilov.models.view.user.UserRewardModel;
 import org.rangelstoilov.services.habit.HabitService;
+import org.rangelstoilov.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +25,13 @@ import java.util.List;
 public class HabitController {
     private final Gson gson;
     private final HabitService habitService;
+    private final UserService userService;
 
     @Autowired
-    public HabitController(Gson gson, HabitService habitService) {
+    public HabitController(Gson gson, HabitService habitService, UserService userService) {
         this.gson = gson;
         this.habitService = habitService;
+        this.userService = userService;
     }
 
     @GetMapping(value = "/habit")
@@ -54,7 +58,8 @@ public class HabitController {
     public ResponseEntity<?> markPlus(@RequestParam String id, Principal principal){
         boolean result = this.habitService.markPlus(id, principal.getName());
         if(result){
-            return new ResponseEntity<>("Habit stats added marked with plus", HttpStatus.CREATED);
+            UserRewardModel userRewardModel = this.userService.rewardUserForTaskDone(principal.getName(), 1);
+            return new ResponseEntity<>(userRewardModel, HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
     }

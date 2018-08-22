@@ -38,11 +38,15 @@
 
 <th:block th:fragment="form-control" xmlns:th="http://www.thymeleaf.org">
     <!-- Plugins js -->
+    <script th:src="@{~/assets/plugins/multiselect/js/jquery.multi-select.js}"></script>
+    <script th:src="@{~/assets/plugins/jquery-quicksearch/jquery.quicksearch.js}"></script>
+    <script th:src="@{~/assets/plugins/select2/dist/js/select2.min.js}"></script>
     <script th:src="@{~/assets/plugins/moment/moment.js}"></script>
     <script th:src="@{~/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
     <script th:src="@{~/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js}"></script>
     <script>
         jQuery(document).ready(function() {
+            $('.select2').select2();
             $('.datepicker-autoclose').datepicker({
                 autoclose: true,
                 todayHighlight: true
@@ -57,13 +61,15 @@
         });
     </script>
     <script th:src="@{~/assets/plugins/handlebars/handlebars.js}"></script>
+    <script th:src="@{~/assets/plugins/mojs/mo.min.js}"></script>
+    <script th:src="@{~/assets/plugins/notyjs/noty.js}"></script>
 </th:block>
 
 <th:block th:fragment="dragula" xmlns:th="http://www.thymeleaf.org">
     <!-- drgula (Drag and drop) js -->
     <script th:src="@{~/assets/plugins/dragula/dragula.min.js}"></script>
     <script>
-        dragula([document.querySelector('#drag-upcoming'), document.querySelector('#drag-inprogress'), document.querySelector('#drag-complete')], {
+        dragula([document.querySelector('#todo-list')], {
             isContainer: function (el) {
                 return false; // only elements in drake.containers will be taken into account
             },
@@ -84,7 +90,6 @@
             mirrorContainer: document.body,    // set the element that gets mirror elements appended
             ignoreInputTextSelection: true     // allows users to select input text, see details below
         });
-
     </script>
 </th:block>
 
