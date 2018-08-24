@@ -1,50 +1,14 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <th:block th:replace="fragments/bundles/meta"></th:block>
-        <!-- App title -->
-        <title>SpringHabit - Responsive Admin Dashboard Template</title>
-        <!-- Css bundles -->
-        <th:block th:replace="fragments/bundles/css :: plugins"></th:block>
-        <th:block th:replace="fragments/bundles/css :: charts"></th:block>
-        <th:block th:replace="fragments/bundles/css :: main"></th:block>
-    </head>
-    <body class="fixed-left">
-        <!-- Begin page -->
-        <!--/*@thymesVar id="user" type="org.rangelstoilov.models.view.user.UserDashboardViewModel"*/-->
-        <div id="wrapper">
-            <th:block th:replace="fragments/common/topbar"></th:block>
-            <th:block th:replace="fragments/common/left-sidebar"></th:block>
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
-            <div class="content-page">
-                <!-- Start content -->
-                <div class="content">
-                    <div class="container">
-                        <th:block th:replace="fragments/dashboard/stats"></th:block>
-                        <th:block th:replace="fragments/dashboard/tasks"></th:block>
-                        <th:block th:replace="fragments/modals/todo-modal"></th:block>
-                        <th:block th:replace="fragments/modals/habit-modal"></th:block>
-                        <th:block th:replace="fragments/modals/recurring-modal"></th:block>
-                    </div> <!-- container -->
-                </div> <!-- content -->
-                <th:block th:replace="fragments/common/footer"></th:block>
-            </div>
-            <th:block th:replace="fragments/common/right-sidebar"></th:block>
-        </div>
-        <!-- Js bundles -->
-        <th:block th:replace="fragments/bundles/javascript :: main"></th:block>
-        <th:block th:replace="fragments/bundles/javascript :: charts"></th:block>
-        <th:block th:replace="fragments/bundles/javascript :: form-control"></th:block>
-        <th:block th:replace="fragments/bundles/javascript :: app"></th:block>
-        <th:block th:replace="fragments/bundles/javascript :: custombox"></th:block>
-        <th:block th:replace="fragments/bundles/javascript :: dragula"></th:block>
-        <!-- Ajax calls and dynamic templates -->
-        <th:block th:replace="fragments/handlebars/dashboard"></th:block>
-        <script th:src="@{~/assets/pages/noty.custom.js}"></script>
-        <script th:src="@{~/assets/pages/jquery.dashboard.todos.js}"></script>
-        <script th:src="@{~/assets/pages/jquery.dashboard.habits.js}"></script>
-        <script th:src="@{~/assets/pages/jquery.dashboard.recurring.js}"></script>
-    </body>
-</html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}">
+<head>
+</head>
+<body>
+<h4 layout:fragment="page-title">Dashboard</h4>
+<section layout:fragment="content">
+    <th:block th:replace="fragments/dashboard/stats"></th:block>
+    <th:block th:replace="fragments/dashboard/tasks"></th:block>
+    <th:block th:replace="fragments/modals/todo-modal"></th:block>
+    <th:block th:replace="fragments/modals/habit-modal"></th:block>
+    <th:block th:replace="fragments/modals/recurring-modal"></th:block>
+</section>

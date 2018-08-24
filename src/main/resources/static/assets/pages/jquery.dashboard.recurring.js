@@ -62,7 +62,8 @@ let recurring = (() => {
                 }).done((data) => {
                     $('#recurring-'+id).fadeOut();
                     noty.handleData(data);
-                    console.log(data)
+                    console.log(data);
+                    stats.reloadStats();
                 }).fail((err) => {
                     //Add notify in corner
                     console.log(err);

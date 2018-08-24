@@ -1,20 +1,23 @@
 package org.rangelstoilov.entities;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
-    public static final int BASE_NEXT_LEVEL_EXP = 500;
-    public static final int BASE_MAX_HEALTH = 100;
-    public static final int BASE_START_LEVEL = 1;
-    public static final int BASE_EXPERIENCE = 0;
-    public static final int BASE_HEALTH = 100;
-    public static final int BASE_GOLD = 0;
+public class User  implements UserDetails {
+    private static final int BASE_NEXT_LEVEL_EXP = 500;
+    private static final int BASE_MAX_HEALTH = 100;
+    private static final int BASE_START_LEVEL = 1;
+    private static final int BASE_EXPERIENCE = 0;
+    private static final int BASE_HEALTH = 100;
+    private static final int BASE_GOLD = 0;
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -37,6 +40,12 @@ public class User {
     @Column
     private Integer level;
 
+    @Transient
+    private Integer levelStartExp;
+
+    @Transient
+    private Integer nextLevelExp;
+
     @Column
     private Integer experience;
 
@@ -48,7 +57,6 @@ public class User {
 
     @Column
     private Integer gold;
-
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ToDo> todos;
@@ -70,7 +78,6 @@ public class User {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
-
 
     public User() {
         this.maxHealth = BASE_MAX_HEALTH;
@@ -109,10 +116,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return this.password;
     }
 
     public void setPassword(String password) {
@@ -215,12 +218,60 @@ public class User {
         this.maxHealth = maxHealth;
     }
 
+    public Integer getLevelStartExp() {
+        return (int) Math.pow(Math.max(0,this.getLevel()-1),2)*User.BASE_NEXT_LEVEL_EXP;
+    }
+
+    public Integer getNextLevelExp() {
+        return (int) Math.pow(this.getLevel(),2)*User.BASE_NEXT_LEVEL_EXP;
+    }
+
     public void levelUp() {
         this.setLevel(this.getLevel()+1);
+        this.setMaxHealth(this.getMaxHealth()*2);
         this.setHealth(this.getMaxHealth());
     }
 
-    public int getNextLevelExp(){
-        return (int) Math.pow(this.getLevel(),2)*User.BASE_NEXT_LEVEL_EXP;
+    public void dead() {
+        this.setLevel(Math.max(1,this.getLevel()-1));
+        this.setExperience(this.getLevelStartExp());
+        this.setMaxHealth(Math.max(BASE_HEALTH,this.getMaxHealth()/2));
+        this.setHealth(this.getMaxHealth());
+        this.setGold(this.getGold()/2);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

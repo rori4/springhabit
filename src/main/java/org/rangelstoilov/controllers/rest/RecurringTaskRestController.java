@@ -4,9 +4,10 @@ import com.google.gson.Gson;
 import org.rangelstoilov.custom.enums.Period;
 import org.rangelstoilov.custom.enums.Status;
 import org.rangelstoilov.custom.enums.converter.PeriodConverter;
-import org.rangelstoilov.custom.pojo.ValidationErrorBuilder;
 import org.rangelstoilov.models.view.recurringTask.RecurringTaskModel;
+import org.rangelstoilov.models.view.user.UserRewardModel;
 import org.rangelstoilov.services.recurringTask.RecurringTaskService;
+import org.rangelstoilov.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +24,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @PreAuthorize("isAuthenticated()")
-public class RecurringTaskController {
+public class RecurringTaskRestController {
     private final Gson gson;
     private final RecurringTaskService recurringTaskService;
+    private final UserService userService;
 
     @Autowired
-    public RecurringTaskController(Gson gson, RecurringTaskService recurringTaskService) {
+    public RecurringTaskRestController(Gson gson, RecurringTaskService recurringTaskService, UserService userService) {
         this.gson = gson;
         this.recurringTaskService = recurringTaskService;
+        this.userService = userService;
     }
 
     @GetMapping(value = "/recurring")
@@ -45,7 +48,7 @@ public class RecurringTaskController {
     @PostMapping(value = "/recurring")
     public ResponseEntity<?> addRecurringTask(@Valid @ModelAttribute RecurringTaskModel toDoModel, Principal principal, Errors errors) {
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
+            return ResponseEntity.badRequest().body(gson.toJson(errors));
         }
         RecurringTaskModel result = this.recurringTaskService.add(toDoModel, principal.getName());
         if (result != null){
@@ -58,7 +61,8 @@ public class RecurringTaskController {
     public ResponseEntity<?> markDone(@RequestParam String id, Principal principal){
         boolean result = this.recurringTaskService.markDone(id, principal.getName());
         if(result){
-            return new ResponseEntity<>("Recurring Task marked done successfully", HttpStatus.CREATED);
+            UserRewardModel userRewardModel = this.userService.rewardUserForTaskDone(principal.getName(), 1);
+            return new ResponseEntity<>(userRewardModel, HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
     }

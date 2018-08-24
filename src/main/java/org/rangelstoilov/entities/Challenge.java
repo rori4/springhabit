@@ -1,5 +1,6 @@
 package org.rangelstoilov.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
 import org.rangelstoilov.custom.enums.Status;
 
@@ -25,14 +26,17 @@ public class Challenge {
 
     @ManyToOne
     @JoinColumn(name="challenger_id", nullable=false)
+    @JsonBackReference
     private User challenger;
 
     @ManyToOne
     @JoinColumn(name="opponent_id", nullable=false)
+    @JsonBackReference
     private User opponent;
 
     @ManyToOne
     @JoinColumn(name="judge_id", nullable=false)
+    @JsonBackReference
     private User judge;
 
     @Column

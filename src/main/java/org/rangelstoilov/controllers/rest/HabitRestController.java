@@ -2,7 +2,6 @@ package org.rangelstoilov.controllers.rest;
 
 import com.google.gson.Gson;
 import org.rangelstoilov.custom.enums.Status;
-import org.rangelstoilov.custom.pojo.ValidationErrorBuilder;
 import org.rangelstoilov.models.view.habit.HabitModel;
 import org.rangelstoilov.models.view.user.UserRewardModel;
 import org.rangelstoilov.services.habit.HabitService;
@@ -22,13 +21,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @PreAuthorize("isAuthenticated()")
-public class HabitController {
+public class HabitRestController {
     private final Gson gson;
     private final HabitService habitService;
     private final UserService userService;
 
     @Autowired
-    public HabitController(Gson gson, HabitService habitService, UserService userService) {
+    public HabitRestController(Gson gson, HabitService habitService, UserService userService) {
         this.gson = gson;
         this.habitService = habitService;
         this.userService = userService;
@@ -45,7 +44,7 @@ public class HabitController {
     @PostMapping(value = "/habit", produces={"application/json"})
     public ResponseEntity<?> addHabit(@Valid @ModelAttribute HabitModel habitModel, Principal principal, Errors errors) {
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
+            return ResponseEntity.badRequest().body(gson.toJson(errors));
         }
         HabitModel result = this.habitService.add(habitModel, principal.getName());
         if (result != null){
@@ -68,7 +67,8 @@ public class HabitController {
     public ResponseEntity<?> markMinus(@RequestParam String id, Principal principal){
         boolean result = this.habitService.markMinus(id, principal.getName());
         if(result){
-            return new ResponseEntity<>("Habit stats added marked with minus", HttpStatus.CREATED);
+            UserRewardModel userRewardModel = this.userService.damageUserForTaskNotDone(principal.getName(), 1);
+            return new ResponseEntity<>(userRewardModel, HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
     }

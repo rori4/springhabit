@@ -8,6 +8,7 @@ public interface UserService {
     boolean register(UserRegisterModel model);
     boolean userExists(String username);
     UserDashboardViewModel getUserDashboardDataByEmail(String email);
-
     UserRewardModel rewardUserForTaskDone(String email, Integer streakMultiplier);
+
+    UserRewardModel damageUserForTaskNotDone(String email, Integer streakMultiplier);
 }

@@ -1,6 +1,6 @@
 package org.rangelstoilov.models.view.user;
 
-import org.rangelstoilov.entities.*;
+import org.rangelstoilov.entities.Challenge;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ public class UserDashboardViewModel {
 
     private String email;
 
-    private String password;
-
     private Integer level;
+
+    private Integer levelStartExp;
 
     private Integer nextLevelExp;
 
@@ -24,19 +24,11 @@ public class UserDashboardViewModel {
 
     private Integer gold;
 
-    private List<ToDo> todos;
-
-    private List<RecurringTask> recurringTasks;
-
-    private List<Habit> habits;
-
     private List<Challenge> challengesCreated;
 
     private List<Challenge> challengesAccepted;
 
     private List<Challenge> challengesJudging;
-
-    private List<Role> roles;
 
     public String getName() {
         return this.name;
@@ -52,14 +44,6 @@ public class UserDashboardViewModel {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Integer getLevel() {
@@ -94,28 +78,28 @@ public class UserDashboardViewModel {
         this.gold = gold;
     }
 
-    public List<ToDo> getTodos() {
-        return this.todos;
+    public Integer getLevelStartExp() {
+        return this.levelStartExp;
     }
 
-    public void setTodos(List<ToDo> todos) {
-        this.todos = todos;
+    public void setLevelStartExp(Integer levelStartExp) {
+        this.levelStartExp = levelStartExp;
     }
 
-    public List<RecurringTask> getRecurringTasks() {
-        return this.recurringTasks;
+    public Integer getNextLevelExp() {
+        return this.nextLevelExp;
     }
 
-    public void setRecurringTasks(List<RecurringTask> recurringTasks) {
-        this.recurringTasks = recurringTasks;
+    public void setNextLevelExp(Integer nextLevelExp) {
+        this.nextLevelExp = nextLevelExp;
     }
 
-    public List<Habit> getHabits() {
-        return this.habits;
+    public Integer getMaxHealth() {
+        return this.maxHealth;
     }
 
-    public void setHabits(List<Habit> habits) {
-        this.habits = habits;
+    public void setMaxHealth(Integer maxHealth) {
+        this.maxHealth = maxHealth;
     }
 
     public List<Challenge> getChallengesCreated() {
@@ -140,25 +124,5 @@ public class UserDashboardViewModel {
 
     public void setChallengesJudging(List<Challenge> challengesJudging) {
         this.challengesJudging = challengesJudging;
-    }
-
-    public List<Role> getRoles() {
-        return this.roles;
-    }
-
-    public Integer getNextLevelExp() {
-        return this.nextLevelExp;
-    }
-
-    public void setNextLevelExp(Integer nextLevelExp) {
-        this.nextLevelExp = nextLevelExp;
-    }
-
-    public Integer getMaxHealth() {
-        return this.maxHealth;
-    }
-
-    public void setMaxHealth(Integer maxHealth) {
-        this.maxHealth = maxHealth;
     }
 }

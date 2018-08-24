@@ -62,7 +62,8 @@ let habits = (() => {
                     url: "/api/habit/minus?id="+id,
                 }).done((data) => {
                     noty.handleData(data);
-                    console.log(data)
+                    console.log(data);
+                    stats.reloadStats();
                 }).fail((err) => {
                     //Add notify in corner
                     console.log(err);
@@ -75,7 +76,8 @@ let habits = (() => {
                     url: "/api/habit/plus?id="+id,
                 }).done((data) => {
                     noty.handleData(data);
-                    console.log(data)
+                    console.log(data);
+                    stats.reloadStats();
                 }).fail((err) => {
                     //Add notify in corner
                     console.log(err);

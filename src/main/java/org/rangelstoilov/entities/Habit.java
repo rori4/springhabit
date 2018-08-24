@@ -1,5 +1,7 @@
 package org.rangelstoilov.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -40,8 +42,10 @@ public class Habit {
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
+    @JsonBackReference
     private User user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "habit", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<HabitStats> habitStats;

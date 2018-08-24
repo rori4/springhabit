@@ -1,4 +1,5 @@
 let noty = (() => {
+    let timeout = 1000;
     function handleData(data) {
         Object.keys(data).forEach(function(reward){
             if(data[reward]!==null){
@@ -17,7 +18,11 @@ let noty = (() => {
                         }
                         break;
                     case 'level':
-                        levelNotification();
+                        if(data[reward] > 0) {
+                            levelNotification();
+                        } else {
+                            deadNotification();
+                        }
                         break;
                 }
             }
@@ -26,11 +31,11 @@ let noty = (() => {
 
     function goldNotification(gold) {
         new Noty({
-            text: '<div class="text-left"><strong>💰 +'+gold+ '</strong> You earned some gold!</div>',
+            text: '<div class="text-left"><strong>💰 +'+gold+ 'BTC</strong> You earned some gold!</div>',
             type: 'warning',
             theme: 'mint',
             layout: 'topRight',
-            timeout: 4000,
+            timeout: timeout,
             animation: {
                 open: mojsShow,
                 close: mojsClose
@@ -44,7 +49,21 @@ let noty = (() => {
             type: 'success',
             theme: 'mint',
             layout: 'topRight',
-            timeout: 4000,
+            timeout: timeout,
+            animation: {
+                open: mojsShow,
+                close: mojsClose
+            }
+        }).show()
+    }
+
+    function deadNotification() {
+        new Noty({
+            text: '<div class="text-left">💀 You have DIED and lost your level and half your gold!</div>',
+            type: 'error',
+            theme: 'mint',
+            layout: 'topRight',
+            timeout: timeout,
             animation: {
                 open: mojsShow,
                 close: mojsClose
@@ -54,11 +73,11 @@ let noty = (() => {
 
     function expNotification(xp) {
         new Noty({
-            text: '<div class="text-left"><strong>⚡ +'+xp+ '</strong> You earned some experience!</div>',
+            text: '<div class="text-left"><strong>⚡ +'+xp+ 'xp</strong> You earned some experience!</div>',
             type: 'success',
             theme: 'mint',
             layout: 'topRight',
-            timeout: 4000,
+            timeout: timeout,
             animation: {
                 open: mojsShow,
                 close: mojsClose
@@ -68,11 +87,11 @@ let noty = (() => {
 
     function maxHealthNotification(health) {
         new Noty({
-            text: '<div class="text-left"><strong>💖 +'+health+ '</strong>to max health!</div>',
+            text: '<div class="text-left"><strong>💖 +'+health+ 'hp</strong> to max health!</div>',
             type: 'success',
             theme: 'mint',
             layout: 'topRight',
-            timeout: 4000,
+            timeout: timeout,
             animation: {
                 open: mojsShow,
                 close: mojsClose
@@ -82,11 +101,11 @@ let noty = (() => {
 
     function damageNotification(health) {
         new Noty({
-            text: '<div class="text-left"><strong>💖 -'+health+ '</strong>You have taken damage!</div>',
-            type: 'danger',
+            text: '<div class="text-left"><strong>💖 '+health+ 'hp</strong> You have taken damage!</div>',
+            type: 'error',
             theme: 'mint',
             layout: 'topRight',
-            timeout: 4000,
+            timeout: timeout,
             animation: {
                 open: mojsShow,
                 close: mojsClose

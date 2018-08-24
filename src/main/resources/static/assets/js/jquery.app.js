@@ -154,7 +154,8 @@ function($) {
 
      //on doc load
     App.prototype.onDocReady = function(e) {
-      FastClick.attach(document.body);
+        //This might give an issue of not recognising clicks
+      // FastClick.attach(document.body);
       resizefunc.push("initscrolls");
       resizefunc.push("changeptype");
 
@@ -224,7 +225,7 @@ var changeptype = function(){
     }
 
     if(!$("#wrapper").hasClass("forced")){
-      if(w > 990){
+      if(w > 1400){
         $("body").removeClass("smallscreen").addClass("widescreen");
           $("#wrapper").removeClass("enlarged");
       }else{

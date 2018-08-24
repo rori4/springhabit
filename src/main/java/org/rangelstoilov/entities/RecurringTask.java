@@ -1,5 +1,6 @@
 package org.rangelstoilov.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
 import org.rangelstoilov.custom.enums.Period;
 import org.rangelstoilov.custom.enums.Status;
@@ -41,6 +42,7 @@ public class RecurringTask {
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
+    @JsonBackReference
     private User user;
 
     @Column(nullable = false)

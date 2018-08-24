@@ -1,6 +1,6 @@
 package org.rangelstoilov.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
 import org.rangelstoilov.custom.enums.Status;
 
@@ -38,9 +38,10 @@ public class ToDo {
     @Column(nullable = false)
     private Integer orderNumber;
 
-    @JsonIgnore
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name="user_id",referencedColumnName="id",nullable=false)
+    @JsonBackReference
     private User user;
 
     @Column(nullable = false)

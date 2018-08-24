@@ -26,3 +26,14 @@
     -moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
     z-index: 20001;
 }
+
+.select2-drop-mask{
+    z-index: 20099;
+}
+
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display:         flex;
+}

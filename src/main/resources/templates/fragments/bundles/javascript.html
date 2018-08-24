@@ -6,7 +6,7 @@
     <script th:src="@{~/assets/js/jquery.min.js}"></script>
     <script th:src="@{~/assets/js/bootstrap.min.js}"></script>
     <script th:src="@{~/assets/js/detect.js}"></script>
-    <script th:src="@{~/assets/js/fastclick.js}"></script>
+    <!--<script th:src="@{~/assets/js/fastclick.js}"></script>-->
     <script th:src="@{~/assets/js/jquery.slimscroll.js}"></script>
     <script th:src="@{~/assets/js/jquery.blockUI.js}"></script>
     <script th:src="@{~/assets/js/waves.js}"></script>
@@ -32,8 +32,8 @@
 
 <th:block th:fragment="custombox" xmlns:th="http://www.thymeleaf.org">
     <!-- Modal-Effect -->
-    <script th:src="@{~/assets/plugins/custombox/dist/custombox.min.js}"></script>
-    <script th:src="@{~/assets/plugins/custombox/dist/legacy.min.js}"></script>
+    <script th:src="@{~/assets/plugins/custombox/4.0.3/custombox.min.js}"></script>
+    <script th:src="@{~/assets/plugins/custombox/4.0.3/custombox.legacy.min.js}"></script>
 </th:block>
 
 <th:block th:fragment="form-control" xmlns:th="http://www.thymeleaf.org">
@@ -46,7 +46,9 @@
     <script th:src="@{~/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js}"></script>
     <script>
         jQuery(document).ready(function() {
-            $('.select2').select2();
+            $('#recurring-resetPeriod').select2({
+                dropdownParent: $('#recurring-modal')
+            });
             $('.datepicker-autoclose').datepicker({
                 autoclose: true,
                 todayHighlight: true

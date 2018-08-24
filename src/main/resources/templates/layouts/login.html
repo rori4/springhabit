@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/bundles/meta"></th:block>
+    <!-- App title -->
+    <title>SpringHabit - Responsive Admin Dashboard Template</title>
+    <th:block th:replace="fragments/bundles/css :: main"></th:block>
+</head>
+<body>
+<div class="account-pages"></div>
+<div class="clearfix"></div>
+<div class="wrapper-page">
+    <th:block th:replace="fragments/login-register/common :: logo"></th:block>
+    <div class="m-t-40 card-box">
+        <section layout:fragment="content">
+        </section>
+    </div>
+    <!-- end card-box-->
+    <section layout:fragment="suggestion">
+        <th:block th:replace="fragments/login-register/common :: sign-up"></th:block>
+    </section>
+</div>
+<!-- end wrapper page -->
+<th:block th:replace="fragments/bundles/javascript :: main"></th:block>
+<th:block th:replace="fragments/bundles/javascript :: app"></th:block>
+</body>
+</html>

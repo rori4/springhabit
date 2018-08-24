@@ -1,3 +1,4 @@
+
 let todo = (() => {
 
     function prepareModalAndLoad() {
@@ -36,6 +37,9 @@ let todo = (() => {
         });
     }
 
+    function openTaks(el) {
+        let id = $(el.closest('[todo-id]')).attr('todo-id');
+    }
 
     function preloadAllToDoTaks() {
         $.ajax({
@@ -62,7 +66,8 @@ let todo = (() => {
                 }).done((data) => {
                     $('#todo-'+id).fadeOut();
                     noty.handleData(data);
-                    console.log(data)
+                    console.log(data);
+                    stats.reloadStats();
                 }).fail((err) => {
                     //Add notify in corner
                     console.log(err);
@@ -86,6 +91,7 @@ let todo = (() => {
         prepareModalAndLoad,
         preloadAllToDoTaks,
         removeErrors,
+        openTaks
     }
 
 })();

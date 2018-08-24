@@ -81,12 +81,21 @@ function($) {
     //initializing custom modal
     Components.prototype.initCustomModalPlugin = function() {
         $('[data-plugin="custommodal"]').on('click', function(e) {
-        	Custombox.open({
-                target: $(this).attr("href"),
-                effect: $(this).attr("data-animation"),
-                overlaySpeed: $(this).attr("data-overlaySpeed"),
-                overlayColor: $(this).attr("data-overlayColor")
+            var modal = new Custombox.modal({
+                content: {
+                    target: $(this).attr("href"),
+                    effect: $(this).attr("data-animation"),
+                    overlaySpeed: $(this).attr("data-overlaySpeed"),
+                    overlayColor: $(this).attr("data-overlayColor"),
+                }
             });
+            modal.open();
+            //Custom addition event listeners @RangelStoilov
+            document.addEventListener('custombox:content:close', function() {
+                $(".modal-demo").find("input[type=text], textarea").val("");
+                $('.select2').select2("val", "Select");
+            });
+
         	e.preventDefault();
         });
     },

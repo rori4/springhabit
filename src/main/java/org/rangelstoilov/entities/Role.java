@@ -1,5 +1,7 @@
 package org.rangelstoilov.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +16,9 @@ public class Role {
 
     private String name;
 
+
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
+    @JsonBackReference
     private Set<User> users;
 
     public Role() {
