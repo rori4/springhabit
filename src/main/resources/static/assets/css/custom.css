@@ -28,7 +28,7 @@
 }
 
 .select2-drop-mask{
-    z-index: 20099;
+    z-index: 20000;
 }
 
 .row-eq-height {
@@ -36,4 +36,9 @@
     display: -webkit-flex;
     display: -ms-flexbox;
     display:         flex;
+}
+
+.label-status {
+    display: inline-block;
+    float:left;
 }

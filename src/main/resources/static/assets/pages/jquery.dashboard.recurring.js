@@ -18,7 +18,7 @@ let recurring = (() => {
                 }
             }).done((data) => {
                 removeErrors();
-                Custombox.close();
+                Custombox.modal.close();
                 $('.form-control').val('');
                 preloadAllRecurringTaks();
             }).fail((err) => {
@@ -47,8 +47,42 @@ let recurring = (() => {
                 prependOnToDoBoard(value)
             });
             addOnCheckboxClickEvents();
+            addOnArchiveEvents();
         }).fail((err) => {
             console.log(err);
+        });
+    }
+
+    function addOnArchiveEvents() {
+        $(".recurring-archive").click(function () {
+            let id = $(this).closest('[recurring-id]').attr('recurring-id');
+            swal({
+                title: "Are you sure you want to archive this recurring task?",
+                text: "You will archive this!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, archive it!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "/api/recurring/archive?id=" + id,
+                    }).done((data) => {
+                        $('#recurring-' + id).fadeOut();
+                        swal("Archived!", "Your recurring task has been archived", "success");
+                        console.log(data);
+                    }).fail((err) => {
+                        //Add notify in corner
+                        console.log(err);
+                    });
+                } else {
+                    swal("Cancelled", "Your recurring task is safe :)", "error");
+                }
+            });
         });
     }
 

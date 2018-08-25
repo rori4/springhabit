@@ -5,7 +5,7 @@
 * Dashboard
 */
 
-!function($) {
+$(document).ready(function() {
     "use strict";
 
     var Dashboard1 = function() {
@@ -57,22 +57,23 @@
             colors: colors
         });
     },
-    
+
     
     Dashboard1.prototype.init = function() {
 
         //creating bar chart
-        var $barData  = [
-            { y: '2010', a: 75 },
-            { y: '2011', a: 42 },
-            { y: '2012', a: 75 },
-            { y: '2013', a: 38 },
-            { y: '2014', a: 19 },
-            { y: '2015', a: 93 }
-        ];
-        this.createBarChart('morris-bar-example', $barData, 'y', ['a'], ['Statistics'], ['#188ae2']);
+        // var $barData  = [
+        //     { y: '2010/08/26', a: 5 },
+        //     { y: '2010/08/27', a: -3 },
+        //     { y: '2010/08/28', a: 4 },
+        //     { y: '2010/08/29', a: -2 },
+        //     { y: '2010/08/30', a: 4 },
+        //     { y: '2010/08/31', a: -10 },
+        //     { y: '2010/09/1', a: 20 },
+        // ];
+        // this.createLineChart('morris-habit-stats', $barData, 'y', ['a'], ['Statistics'], ['#188ae2']);
 
-        //create line chart
+        // //create line chart
         var $data  = [
             { y: '2008', a: 50, b: 0 },
             { y: '2009', a: 75, b: 50 },
@@ -83,15 +84,15 @@
             { y: '2014', a: 75, b: 50 },
             { y: '2015', a: 100, b: 70 }
           ];
-        this.createLineChart('morris-line-example', $data, 'y', ['a','b'], ['Series A','Series B'],['0.9'],['#ffffff'],['#999999'], ['#10c469','#188ae2']);
-
-        //creating donut chart
-        var $donutData = [
-                {label: "Download Sales", value: 12},
-                {label: "In-Store Sales", value: 30},
-                {label: "Mail-Order Sales", value: 20}
-            ];
-        this.createDonutChart('morris-donut-example', $donutData, ['#ff8acc', '#5b69bc', "#35b8e0"]);
+        this.createLineChart('morris-habit-stats', $data, 'y', ['a'], ['Series A','Series B'],['0.9'],['#ffffff'],['#999999'], ['#10c469','#188ae2']);
+        //
+        // //creating donut chart
+        // var $donutData = [
+        //         {label: "Download Sales", value: 12},
+        //         {label: "In-Store Sales", value: 30},
+        //         {label: "Mail-Order Sales", value: 20}
+        //     ];
+        // this.createDonutChart('morris-donut-example', $donutData, ['#ff8acc', '#5b69bc', "#35b8e0"]);
     },
     //init
     $.Dashboard1 = new Dashboard1, $.Dashboard1.Constructor = Dashboard1
@@ -101,4 +102,4 @@
 function($) {
     "use strict";
     $.Dashboard1.init();
-}(window.jQuery);
+}(window.jQuery));

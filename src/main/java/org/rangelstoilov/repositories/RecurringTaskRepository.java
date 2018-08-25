@@ -18,5 +18,5 @@ public interface RecurringTaskRepository extends JpaRepository<RecurringTask, St
 
     RecurringTask findRecurringTaskById(String id);
 
-    List<RecurringTask> findAllByOrderNumberGreaterThan(Integer orderNumber);
+    List<RecurringTask> findAllByStatusAndOrderNumberGreaterThan(Status status,Integer orderNumber);
 }

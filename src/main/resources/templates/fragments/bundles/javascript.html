@@ -38,6 +38,7 @@
 
 <th:block th:fragment="form-control" xmlns:th="http://www.thymeleaf.org">
     <!-- Plugins js -->
+    <script th:src="@{~/assets/plugins/bootstrap-sweetalert/sweet-alert.min.js}"></script>
     <script th:src="@{~/assets/plugins/multiselect/js/jquery.multi-select.js}"></script>
     <script th:src="@{~/assets/plugins/jquery-quicksearch/jquery.quicksearch.js}"></script>
     <script th:src="@{~/assets/plugins/select2/dist/js/select2.min.js}"></script>
@@ -63,6 +64,7 @@
         });
     </script>
     <script th:src="@{~/assets/plugins/handlebars/handlebars.js}"></script>
+    <script th:src="@{~/assets/js/handlebars.helpers.js}"></script>
     <script th:src="@{~/assets/plugins/mojs/mo.min.js}"></script>
     <script th:src="@{~/assets/plugins/notyjs/noty.js}"></script>
 </th:block>

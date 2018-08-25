@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/base}">
+<head>
+</head>
+<body>
+<h4 layout:fragment="page-title">To Do Detail Page</h4>
+<section layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-box task-detail">
+                    <div class="dropdown pull-right">
+                        <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="false">
+                            <i class="zmdi zmdi-more-vert"></i>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </div>
+                    <form role="form" th:object="${recurring}" th:action="@{/recurring/save}" th:method="POST">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group no-margin">
+                                    <label for="todo-title">Title *</label>
+                                    <input type="text" class="form-control" name="title" id="todo-title" th:field="*{title}" placeholder="Add a title" th:classappend="${#fields.hasErrors('title') ? 'parsley-error' : '' }"/>
+                                    <ul th:if="${#fields.hasErrors('title')}" class="parsley-errors-list filled">
+                                        <li class="parsley-required" th:each="error: ${#fields.errors('title')}" th:text="${error}">
+                                            Title error
+                                        </li>
+                                    </ul>
+                                    <input type="hidden" id="todo-id" name="id" th:field="*{id}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <h5><b>Notes</b></h5>
+                                    <textarea id="todo-notes" name="notes" class="form-control show-max-length no-resize"
+                                              maxlength="225" rows="4"
+                                              placeholder="Add a note to your to do task." th:field="*{notes}"
+                                              th:classappend="${#fields.hasErrors('notes') ? 'parsley-error' : '' }">
+                                    </textarea>
+                                    <ul th:if="${#fields.hasErrors('notes')}" class="parsley-errors-list filled">
+                                        <li class="parsley-required" th:each="error: ${#fields.errors('notes')}" th:text="${error}">
+                                            Notes error
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul class="list-inline task-dates m-b-0 m-t-20">
+                            <li>
+                                <h5 class="font-600 m-b-5">Last Edit</h5>
+                                <p th:text="*{#dates.format(createdOn, 'MM/dd/yyyy HH:mm:ss')}">
+                                </p>
+                            </li>
+
+                            <li>
+                                <div class="form-group">
+                                    <h5><b>Recurring Period</b></h5>
+                                    <select class="form-control select2" id="recurring-resetPeriod" th:field="*{resetPeriod}">
+                                        <option th:each="state : ${T(org.rangelstoilov.custom.enums.Period).values()}"
+                                                th:value="${state.toString()}"
+                                                th:text="${state.toString()}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="text-right m-t-30">
+                                    <button type="submit" class="btn btn-success waves-effect waves-light">
+                                        Save
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-default waves-effect">Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- end col -->
+        </div>
+        <!-- end row -->
+    </div> <!-- container -->
+</section>
+</body>
+</html>

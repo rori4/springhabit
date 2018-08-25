@@ -1,4 +1,4 @@
-package org.rangelstoilov.controllers.rest;
+package org.rangelstoilov.controllers;
 
 import com.google.gson.Gson;
 import org.rangelstoilov.custom.enums.Period;
@@ -12,40 +12,59 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Comparator;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api")
+@Controller
 @PreAuthorize("isAuthenticated()")
-public class RecurringTaskRestController {
+public class RecurringTaskController extends BaseController {
     private final Gson gson;
     private final RecurringTaskService recurringTaskService;
-    private final UserService userService;
 
     @Autowired
-    public RecurringTaskRestController(Gson gson, RecurringTaskService recurringTaskService, UserService userService) {
+    public RecurringTaskController(Gson gson, RecurringTaskService recurringTaskService, UserService userService) {
         this.gson = gson;
         this.recurringTaskService = recurringTaskService;
-        this.userService = userService;
     }
 
-    @GetMapping(value = "/recurring")
-    public @ResponseBody
-    String profile(Principal principal) {
+    @GetMapping("/recurring/details")
+    public ModelAndView todoDetails(@RequestParam String id){
+        RecurringTaskModel model = this.recurringTaskService.findById(id);
+        return this.view("tasks/recurring-details","recurring",model);
+    }
+
+    @PostMapping("/recurring/save")
+    public ModelAndView save(@Valid @ModelAttribute("todo") RecurringTaskModel model, BindingResult result, Principal principal){
+        if (!result.hasErrors()) {
+            recurringTaskService.add(model, principal.getName());
+        } else if (result.hasErrors()) {
+            return new ModelAndView("tasks/recurring-details", "recurring", model);
+        }
+        return new ModelAndView("redirect:/");
+    }
+
+    //API
+
+    @GetMapping(value = "/api/recurring")
+    @ResponseBody
+    public String profile(Principal principal) {
         List<RecurringTaskModel> result = this.recurringTaskService.getAllRecurringTasks(Status.ACTIVE, principal.getName());
         result.sort(Comparator.comparing(RecurringTaskModel::getOrderNumber));
         return
                 this.gson.toJson(result);
     }
 
-    @PostMapping(value = "/recurring")
+    @PostMapping(value = "/api/recurring")
+    @ResponseBody
     public ResponseEntity<?> addRecurringTask(@Valid @ModelAttribute RecurringTaskModel toDoModel, Principal principal, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(gson.toJson(errors));
@@ -57,12 +76,21 @@ public class RecurringTaskRestController {
         return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "/recurring/done")
+    @PostMapping(value = "/api/recurring/done")
+    @ResponseBody
     public ResponseEntity<?> markDone(@RequestParam String id, Principal principal){
-        boolean result = this.recurringTaskService.markDone(id, principal.getName());
-        if(result){
-            UserRewardModel userRewardModel = this.userService.rewardUserForTaskDone(principal.getName(), 1);
+        UserRewardModel userRewardModel = this.recurringTaskService.markDone(id, principal.getName());
+        if(userRewardModel != null){
             return new ResponseEntity<>(userRewardModel, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/api/recurring/archive")
+    public ResponseEntity<?> archive(@RequestParam String id, Principal principal){
+        RecurringTaskModel result = recurringTaskService.archive(id, principal.getName());
+        if (result != null){
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
         return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
     }

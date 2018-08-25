@@ -3,7 +3,6 @@ package org.rangelstoilov.controllers;
 import org.springframework.web.servlet.ModelAndView;
 
 public abstract class BaseController {
-
     protected ModelAndView view(String view) {
         ModelAndView modelAndView = new ModelAndView(view);
         return modelAndView;
@@ -15,6 +14,4 @@ public abstract class BaseController {
         modelAndView.addObject(name, model);
         return modelAndView;
     }
-
-
 }

@@ -5,6 +5,7 @@ import org.rangelstoilov.custom.enums.Period;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 public class RecurringTaskModel {
     private String id;
@@ -19,7 +20,13 @@ public class RecurringTaskModel {
     @Enumerated
     private Period resetPeriod;
 
+    private Date createdOn;
+
     private Integer orderNumber;
+
+    public RecurringTaskModel() {
+        this.createdOn = new Date();
+    }
 
     public String getId() {
         return this.id;
@@ -59,5 +66,13 @@ public class RecurringTaskModel {
 
     public void setOrderNumber(Integer orderNumber) {
         this.orderNumber = orderNumber;
+    }
+
+    public Date getCreatedOn() {
+        return this.createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
     }
 }

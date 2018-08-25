@@ -1,7 +1,7 @@
 let habits = (() => {
 
     function prepareModalAndLoad() {
-        preloadAllHabitTaks();
+        preloadAllActiveHabits();
         $('#habit-submit').click(function (e) {
             let prefix = "habit-";
             e.preventDefault();
@@ -18,9 +18,9 @@ let habits = (() => {
             }).done((data) => {
                 console.log(data);
                 removeErrors();
-                Custombox.close();
+                Custombox.modal.close();
                 $('.form-control').val('');
-                preloadAllHabitTaks();
+                preloadAllActiveHabits();
             }).fail((err) => {
                 removeErrors();
                 let source = $("#error-field").html();
@@ -36,18 +36,74 @@ let habits = (() => {
         });
     }
 
-    function preloadAllHabitTaks() {
+    function preloadAllActiveHabits() {
         $.ajax({
             type: 'GET',
-            url: "/api/habit",
+            url: "/api/habit?status=ACTIVE",
         }).done((data) => {
             $("#habit-list").empty();
+            $("#habit-status").text('Active').addClass('label-success').removeClass('label-warning');
             $.each(JSON.parse(data), function (index, value) {
-                prependOnHabitBoard(value);
+                let source = $("#habit-template").html();
+                let template = Handlebars.compile(source);
+                $("#habit-list").prepend(template(value)).fadeIn();
             });
             addButtonsClickEvents();
+            addOnArchiveEvents();
         }).fail((err) => {
             console.log(err);
+        });
+    }
+
+    function preloadAllArchivedHabits() {
+        $.ajax({
+            type: 'GET',
+            url: "/api/habit?status=ARCHIVED",
+        }).done((data) => {
+            $("#habit-list").empty();
+            $("#habit-status").text('Archived').addClass('label-warning').removeClass('label-success');
+            $.each(JSON.parse(data), function (index, value) {
+                let source = $("#habit-template").html();
+                let template = Handlebars.compile(source);
+                $("#habit-list").prepend(template(value)).fadeIn();
+            });
+            addButtonsClickEvents();
+            addOnArchiveEvents();
+        }).fail((err) => {
+            console.log(err);
+        });
+    }
+
+    function addOnArchiveEvents() {
+        $(".habit-archive").click(function () {
+            let id = $(this).closest('[habit-id]').attr('habit-id');
+            swal({
+                title: "Are you sure you want to archive this habit?",
+                text: "You will archive this!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, archive it!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "/api/habit/archive?id=" + id,
+                    }).done((data) => {
+                        $('#habit-' + id).fadeOut();
+                        swal("Archived!", "Your habit has been archived", "success");
+                        console.log(data);
+                    }).fail((err) => {
+                        //Add notify in corner
+                        console.log(err);
+                    });
+                } else {
+                    swal("Cancelled", "Your habit is safe :)", "error");
+                }
+            });
         });
     }
 
@@ -99,6 +155,7 @@ let habits = (() => {
 
     return {
         prepareModalAndLoad,
+        preloadAllActiveHabits,
         prependOnHabitBoard,
         removeErrors
     }

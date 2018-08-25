@@ -16,5 +16,5 @@ public interface HabitRepository extends JpaRepository<Habit, String> {
 
     Habit findHabitById(String id);
 
-    List<Habit> findAllByOrderNumberGreaterThan(Integer orderNumber);
+    List<Habit> findAllByStatusAndOrderNumberGreaterThan(Status status, Integer orderNumber);
 }

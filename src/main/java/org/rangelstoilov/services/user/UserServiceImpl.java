@@ -117,4 +117,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRewardModel;
     }
 
+    @Override
+    public User findFirstByEmail(String userEmail) {
+        return userRepository.findFirstByEmail(userEmail);
+    }
+
 }

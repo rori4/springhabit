@@ -1,5 +1,6 @@
 package org.rangelstoilov.services.user;
 
+import org.rangelstoilov.entities.User;
 import org.rangelstoilov.models.view.user.UserDashboardViewModel;
 import org.rangelstoilov.models.view.user.UserRegisterModel;
 import org.rangelstoilov.models.view.user.UserRewardModel;
@@ -11,4 +12,6 @@ public interface UserService {
     UserRewardModel rewardUserForTaskDone(String email, Integer streakMultiplier);
 
     UserRewardModel damageUserForTaskNotDone(String email, Integer streakMultiplier);
+
+    User findFirstByEmail(String userEmail);
 }

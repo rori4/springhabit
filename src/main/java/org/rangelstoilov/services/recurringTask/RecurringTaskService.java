@@ -2,6 +2,7 @@ package org.rangelstoilov.services.recurringTask;
 
 import org.rangelstoilov.custom.enums.Status;
 import org.rangelstoilov.models.view.recurringTask.RecurringTaskModel;
+import org.rangelstoilov.models.view.user.UserRewardModel;
 
 import java.util.List;
 
@@ -10,5 +11,9 @@ public interface RecurringTaskService {
 
     List<RecurringTaskModel> getAllRecurringTasks(Status status, String userEmail);
 
-    boolean markDone(String id, String userEmail);
+    UserRewardModel markDone(String id, String userEmail);
+
+    RecurringTaskModel findById(String id);
+
+    RecurringTaskModel archive(String id, String userEmail);
 }

@@ -11,15 +11,15 @@ import java.util.List;
 @Repository
 public interface ToDoRepository extends JpaRepository<ToDo, String> {
 
-    ToDo findToDoById(String id);
-
     List<ToDo> findAllByStatus(Status status);
 
     List<ToDo> findAllByOrderNumberGreaterThan(Integer orderNumber);
 
-    List<ToDo> findAllByOrderNumberLessThan(Integer orderNumber);
+    List<ToDo> findAllByStatusAndOrderNumberLessThan(Status status, Integer orderNumber);
 
     List<ToDo> findAllByStatusAndUser(Status status, User user);
 
     Integer countAllByUserAndStatus(User user, Status status);
+
+    ToDo findToDoById(String id);
 }

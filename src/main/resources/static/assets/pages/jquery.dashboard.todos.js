@@ -1,8 +1,7 @@
-
 let todo = (() => {
 
     function prepareModalAndLoad() {
-        preloadAllToDoTaks();
+        preloadActiveToDoTasks();
         $('#todo-submit').click(function (e) {
             let prefix = "todo-";
             e.preventDefault();
@@ -19,9 +18,9 @@ let todo = (() => {
                 }
             }).done((data) => {
                 removeErrors();
-                Custombox.close();
+                Custombox.modal.close();
                 $('.form-control').val('');
-                preloadAllToDoTaks();
+                preloadActiveToDoTasks();
             }).fail((err) => {
                 removeErrors();
                 let source = $("#error-field").html();
@@ -41,16 +40,39 @@ let todo = (() => {
         let id = $(el.closest('[todo-id]')).attr('todo-id');
     }
 
-    function preloadAllToDoTaks() {
+    function preloadActiveToDoTasks() {
         $.ajax({
             type: 'GET',
-            url: "/api/todo",
+            url: "/api/todo?status=ACTIVE",
         }).done((data) => {
             $("#todo-list").empty();
+            $("#todo-status").text('Active').addClass('label-success').removeClass('label-warning');
             $.each(JSON.parse(data), function (index, value) {
-                prependOnToDoBoard(value)
+                let source = $("#todo-template").html();
+                let template = Handlebars.compile(source);
+                $("#todo-list").prepend(template(value));
             });
             addOnCheckboxClickEvents();
+            addOnArchiveEvents();
+        }).fail((err) => {
+            console.log(err);
+        });
+    }
+
+    function preloadArchivedToDoTasks() {
+        $.ajax({
+            type: 'GET',
+            url: "/api/todo?status=ARCHIVED",
+        }).done((data) => {
+            $("#todo-list").empty();
+            $("#todo-status").text('Archived').addClass('label-warning').removeClass('label-success');
+            $.each(JSON.parse(data), function (index, value) {
+                let source = $("#todo-archived-template").html();
+                let template = Handlebars.compile(source);
+                $("#todo-list").prepend(template(value));
+            });
+            addOnCheckboxClickEvents();
+            addOnArchiveEvents();
         }).fail((err) => {
             console.log(err);
         });
@@ -62,9 +84,9 @@ let todo = (() => {
                 let id = el.target.id;
                 $.ajax({
                     type: 'POST',
-                    url: "/api/todo/done?id="+id,
+                    url: "/api/todo/done?id=" + id,
                 }).done((data) => {
-                    $('#todo-'+id).fadeOut();
+                    $('#todo-' + id).fadeOut();
                     noty.handleData(data);
                     console.log(data);
                     stats.reloadStats();
@@ -73,6 +95,39 @@ let todo = (() => {
                     console.log(err);
                 });
             }
+        });
+    }
+
+    function addOnArchiveEvents() {
+    $(".todo-archive").click(function () {
+            let id = $(this).closest('[todo-id]').attr('todo-id');
+            swal({
+                title: "Are you sure you want to archive this to do?",
+                text: "You will archive this!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, archive it!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "/api/todo/archive?id=" + id,
+                    }).done((data) => {
+                        $('#todo-' + id).fadeOut();
+                        swal("Archived!", "Your task has been archived", "success");
+                        console.log(data);
+                    }).fail((err) => {
+                        //Add notify in corner
+                        console.log(err);
+                    });
+                } else {
+                    swal("Cancelled", "Your to do task is safe :)", "error");
+                }
+            });
         });
     }
 
@@ -89,7 +144,8 @@ let todo = (() => {
 
     return {
         prepareModalAndLoad,
-        preloadAllToDoTaks,
+        preloadActiveToDoTasks,
+        preloadArchivedToDoTasks,
         removeErrors,
         openTaks
     }

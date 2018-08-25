@@ -1,12 +1,17 @@
 package org.rangelstoilov.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.rangelstoilov.custom.enums.Period;
 import org.rangelstoilov.custom.enums.Status;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "recurring_tasks")
@@ -45,6 +50,11 @@ public class RecurringTask {
     @JsonBackReference
     private User user;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "recurringTask", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<RecurringTaskStats> recurringTaskStats;
+
     @Column(nullable = false)
     private Integer orderNumber;
 
@@ -52,6 +62,7 @@ public class RecurringTask {
         this.count = 0;
         this.createdOn = new Date();
         this.status = Status.ACTIVE;
+        this.recurringTaskStats = new ArrayList<>();
     }
 
     public String getId() {
