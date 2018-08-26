@@ -1,6 +1,6 @@
 package org.rangelstoilov.custom.enums;
 
-public enum Status {
+public enum TaskStatus {
     ACTIVE,
     DONE,
     ARCHIVED,

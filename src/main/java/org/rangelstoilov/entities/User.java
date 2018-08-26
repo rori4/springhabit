@@ -1,5 +1,6 @@
 package org.rangelstoilov.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -67,12 +68,15 @@ public class User  implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Habit> habits;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "challenger", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Challenge> challengesCreated;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "opponent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Challenge> challengesAccepted;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "judge", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Challenge> challengesJudging;
 
@@ -245,7 +249,6 @@ public class User  implements UserDetails {
         return null;
     }
 
-    @Override
     public String getPassword() {
         return this.password;
     }

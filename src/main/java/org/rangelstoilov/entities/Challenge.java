@@ -1,11 +1,9 @@
 package org.rangelstoilov.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
-import org.rangelstoilov.custom.enums.Status;
+import org.rangelstoilov.custom.enums.ChallengeStatus;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import java.util.Date;
 
 @Entity
@@ -20,23 +18,16 @@ public class Challenge {
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
 
-    @Column(nullable = false)
-    @Min(1)
-    private Integer wager;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="challenger_id", nullable=false)
-    @JsonBackReference
     private User challenger;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="opponent_id", nullable=false)
-    @JsonBackReference
     private User opponent;
 
-    @ManyToOne
-    @JoinColumn(name="judge_id", nullable=false)
-    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="judge_id")
     private User judge;
 
     @Column
@@ -44,11 +35,18 @@ public class Challenge {
 
     @Column(nullable = false)
     @Enumerated
-    private Status status;
+    private ChallengeStatus challengeStatus;
 
     public Challenge() {
         this.createdOn = new Date();
-        this.status = Status.ACTIVE;
+        this.challengeStatus = ChallengeStatus.PENDING;
+    }
+
+    public Challenge(User challenger, User opponent) {
+        this.challenger = challenger;
+        this.opponent = opponent;
+        this.createdOn = new Date();
+        this.challengeStatus = ChallengeStatus.PENDING;
     }
 
     public String getId() {
@@ -83,20 +81,12 @@ public class Challenge {
         this.judge = judge;
     }
 
-    public Integer getWager() {
-        return this.wager;
+    public ChallengeStatus getTaskStatus() {
+        return this.challengeStatus;
     }
 
-    public void setWager(Integer wager) {
-        this.wager = wager;
-    }
-
-    public Status getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setTaskStatus(ChallengeStatus challengeStatus) {
+        this.challengeStatus = challengeStatus;
     }
 
     public Date getCreatedOn() {

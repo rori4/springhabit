@@ -57,13 +57,47 @@
                         <li>
                             <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top"
                                title="" data-original-title="Archive Task">
-                                <i class="zmdi zmdi-delete red todo-delete"></i>
+                                <i class="zmdi zmdi-delete todo-delete"></i>
                             </a>
                         </li>
                         <li>
                             <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top"
                                title="" data-original-title="Archive Task">
-                                <i class="zmdi zmdi-refresh-sync red todo-delete"></i>
+                                <i class="zmdi zmdi-refresh-sync todo-activate"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </script>
+</th:block>
+
+<th:block th:fragment="todo-done" xmlns:th="http://www.thymeleaf.org">
+    <script id="todo-done-template" type="text/x-handlebars-template">
+        <li id="todo-{{id}}" todo-id="{{id}}">
+            <div class="card-box kanban-box wrap-long-word">
+                <div class="checkbox-wrapper">
+                    <div class="checkbox checkbox-success checkbox-single">
+                        <input type="checkbox" id="{{id}}" value="option2"
+                               aria-label="Single checkbox Two" checked>
+                        <label></label>
+                    </div>
+                </div>
+                <div class="kanban-detail">
+                    {{#if dueDate}}
+                    <span class="label label-inverse pull-right">{{formatDate dueDate "short"}}</span>
+                    {{/if}}
+                    <h4><a href="javascript:void(0)"><del>{{title}}</del></a></h4>
+                    <p><a href="javascript:void(0)"><del>{{notes}}</del></a></p>
+                    {{#if completedOn}}
+                    <span class="label label-default">Completed on: {{formatDate completedOn "short"}}</span>
+                    {{/if}}
+                    <ul class="list-inline m-b-0">
+                        <li>
+                            <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top"
+                               title="" data-original-title="Archive Task">
+                                <i class="zmdi zmdi-archive todo-archive"></i>
                             </a>
                         </li>
                     </ul>
@@ -101,6 +135,40 @@
     </script>
 </th:block>
 
+<th:block th:fragment="habit-archived" xmlns:th="http://www.thymeleaf.org">
+    <script id="habit-archived-template" type="text/x-handlebars-template">
+        <li id="habit-{{id}}" habit-id="{{id}}">
+            <div class="card-box kanban-box wrap-long-word">
+                <div class="row" id="{{id}}">
+                    <button class="btn btn-icon btn-sm waves-effect waves-light btn-danger m-b-5 pull-left col-md-12 col-xs-12 col-lg-2" disabled><i
+                            class="fa fa-minus"></i></button>
+
+                    <div class="kanban-detail kanban-rml col-lg-6 col-md-12 col-xs-12">
+                        <h4><a href="javascript:void(0)">{{title}}</a></h4>
+                        <p><a href="javascript:void(0)">{{notes}}</a></p>
+                        <ul class="list-inline m-b-0">
+                            <li>
+                                <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top"
+                                   title="" data-original-title="Archive Habit">
+                                    <i class="zmdi zmdi-delete habit-delete"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top"
+                                   title="" data-original-title="Archive Habit">
+                                    <i class="zmdi zmdi-refresh-sync habit-activate"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-icon btn-sm waves-effect waves-light btn-success m-b-5 col-md-12 col-xs-12 col-lg-2 pull-right" disabled>
+                        <i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+        </li>
+    </script>
+</th:block>
+
 <th:block th:fragment="recurring" xmlns:th="http://www.thymeleaf.org">
     <script id="recurring-template" type="text/x-handlebars-template">
         <li id="recurring-{{id}}" recurring-id="{{id}}">
@@ -117,6 +185,64 @@
                     <span class="label label-danger pull-right">{{dueDate}}</span>
                     <h4><a href="/recurring/details?id={{id}}">{{title}}</a></h4>
                     <p><a href="/recurring/details?id={{id}}">{{notes}}</a></p>
+                    <ul class="list-inline m-b-0">
+                        <li>
+                            <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top"
+                               title="" data-original-title="Archive Task">
+                                <i class="zmdi zmdi-archive recurring-archive"></i>
+                            </a>
+                        </li>
+                        <span class="label label-primary">{{resetPeriod}}</span>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </script>
+</th:block>
+
+<th:block th:fragment="recurring-archived" xmlns:th="http://www.thymeleaf.org">
+    <script id="recurring-archived-template" type="text/x-handlebars-template">
+        <li id="recurring-{{id}}" recurring-id="{{id}}">
+            <div class="card-box kanban-box wrap-long-word">
+                <div class="kanban-detail">
+                    <h4><a href="javascript:void(0)" class="text-muted"><del>{{title}}</del></a></h4>
+                    <p><a href="javascript:void(0)" class="text-muted"><del>{{notes}}</del></a></p>
+                    <ul class="list-inline m-b-0">
+                        <li>
+                            <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top"
+                               title="" data-original-title="Archive Task">
+                                <i class="zmdi zmdi-delete recurring-delete"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top"
+                               title="" data-original-title="Archive Task">
+                                <i class="zmdi zmdi-refresh-sync recurring-activate"></i>
+                            </a>
+                        </li>
+                        <span class="label label-primary">{{resetPeriod}}</span>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </script>
+</th:block>
+
+<th:block th:fragment="recurring-done" xmlns:th="http://www.thymeleaf.org">
+    <script id="recurring-done-template" type="text/x-handlebars-template">
+        <li id="recurring-{{id}}" recurring-id="{{id}}">
+            <div class="card-box kanban-box wrap-long-word">
+                <div class="checkbox-wrapper">
+                    <div class="checkbox checkbox-success checkbox-single">
+                        <input type="checkbox" id="{{id}}" value="option2"
+                               aria-label="Single checkbox Two" checked>
+                        <label></label>
+                    </div>
+                </div>
+
+                <div class="kanban-detail">
+                    <h4><a href="javascript:void(0)">{{title}}</a></h4>
+                    <p><a href="javascript:void(0)">{{notes}}</a></p>
                     <ul class="list-inline m-b-0">
                         <li>
                             <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top"

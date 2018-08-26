@@ -18,7 +18,7 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
-    public void addUserAndAdminRoleIfNotExistant(){
+    public void addUserAndAdminRoleIfNotExist(){
         if(roleRepository.findFirstByName("USER") == null){
             Role userRole = new Role("USER");
             roleRepository.save(userRole);

@@ -2,7 +2,7 @@ package org.rangelstoilov.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
-import org.rangelstoilov.custom.enums.Status;
+import org.rangelstoilov.custom.enums.TaskStatus;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -46,16 +46,16 @@ public class ToDo {
 
     @Column(nullable = false)
     @Enumerated
-    private Status status;
+    private TaskStatus taskStatus;
 
     public ToDo() {
         this.createdOn = new Date();
-        this.status = Status.ACTIVE;
+        this.taskStatus = TaskStatus.ACTIVE;
     }
 
     public ToDo(User user, Integer orderNumber) {
         this.createdOn = new Date();
-        this.status = Status.ACTIVE;
+        this.taskStatus = TaskStatus.ACTIVE;
         this.user = user;
         this.orderNumber = orderNumber;
     }
@@ -108,12 +108,12 @@ public class ToDo {
         this.user = user;
     }
 
-    public Status getStatus() {
-        return this.status;
+    public TaskStatus getTaskStatus() {
+        return this.taskStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
     }
 
     public Integer getOrderNumber() {

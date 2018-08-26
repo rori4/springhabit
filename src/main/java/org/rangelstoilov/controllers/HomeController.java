@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.security.Principal;
 
 @Controller
+@PreAuthorize("isAuthenticated()")
 public class HomeController extends BaseController {
     private final UserService userService;
 
@@ -20,7 +21,6 @@ public class HomeController extends BaseController {
     }
 
     @GetMapping("/")
-    @PreAuthorize("isAuthenticated()")
     public ModelAndView index(Principal principal){
         UserDashboardViewModel userDashboardDataByEmail = userService.getUserDashboardDataByEmail(principal.getName());
         return this.view("home/index", "user", userDashboardDataByEmail);

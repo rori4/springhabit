@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.rangelstoilov.custom.enums.Status;
+import org.rangelstoilov.custom.enums.TaskStatus;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class Habit {
 
     @Column(nullable = false)
     @Enumerated
-    private Status status;
+    private TaskStatus taskStatus;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
@@ -56,7 +56,7 @@ public class Habit {
     public Habit() {
         this.createdOn = new Date();
         this.count = 0;
-        this.status = Status.ACTIVE;
+        this.taskStatus = TaskStatus.ACTIVE;
         this.habitStats = new ArrayList<>();
     }
 
@@ -108,12 +108,12 @@ public class Habit {
         this.user = user;
     }
 
-    public Status getStatus() {
-        return this.status;
+    public TaskStatus getTaskStatus() {
+        return this.taskStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
     }
 
     public Integer getOrderNumber() {

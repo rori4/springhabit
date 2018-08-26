@@ -2,7 +2,7 @@ package org.rangelstoilov.controllers;
 
 import com.google.gson.Gson;
 import org.rangelstoilov.custom.enums.Period;
-import org.rangelstoilov.custom.enums.Status;
+import org.rangelstoilov.custom.enums.TaskStatus;
 import org.rangelstoilov.custom.enums.converter.PeriodConverter;
 import org.rangelstoilov.models.view.recurringTask.RecurringTaskModel;
 import org.rangelstoilov.models.view.user.UserRewardModel;
@@ -56,8 +56,8 @@ public class RecurringTaskController extends BaseController {
 
     @GetMapping(value = "/api/recurring")
     @ResponseBody
-    public String profile(Principal principal) {
-        List<RecurringTaskModel> result = this.recurringTaskService.getAllRecurringTasks(Status.ACTIVE, principal.getName());
+    public String profile(@RequestParam String status,Principal principal) {
+        List<RecurringTaskModel> result = this.recurringTaskService.getAllRecurringTasks(TaskStatus.valueOf(status), principal.getName());
         result.sort(Comparator.comparing(RecurringTaskModel::getOrderNumber));
         return
                 this.gson.toJson(result);
@@ -89,6 +89,24 @@ public class RecurringTaskController extends BaseController {
     @PostMapping("/api/recurring/archive")
     public ResponseEntity<?> archive(@RequestParam String id, Principal principal){
         RecurringTaskModel result = recurringTaskService.archive(id, principal.getName());
+        if (result != null){
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/api/recurring/delete")
+    public ResponseEntity<?> delete(@RequestParam String id, Principal principal){
+        RecurringTaskModel result = recurringTaskService.delete(id, principal.getName());
+        if (result != null){
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/api/recurring/activate")
+    public ResponseEntity<?> activate(@RequestParam String id, Principal principal){
+        RecurringTaskModel result = recurringTaskService.activate(id, principal.getName());
         if (result != null){
             return new ResponseEntity<>(result, HttpStatus.OK);
         }

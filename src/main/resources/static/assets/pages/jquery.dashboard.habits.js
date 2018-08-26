@@ -63,14 +63,79 @@ let habits = (() => {
             $("#habit-list").empty();
             $("#habit-status").text('Archived').addClass('label-warning').removeClass('label-success');
             $.each(JSON.parse(data), function (index, value) {
-                let source = $("#habit-template").html();
+                let source = $("#habit-archived-template").html();
                 let template = Handlebars.compile(source);
                 $("#habit-list").prepend(template(value)).fadeIn();
             });
-            addButtonsClickEvents();
-            addOnArchiveEvents();
+            addOnDeleteEvents();
+            addOnActivateEvents();
         }).fail((err) => {
             console.log(err);
+        });
+    }
+
+    function addOnDeleteEvents() {
+        $(".habit-delete").click(function () {
+            let id = $(this).closest('[habit-id]').attr('habit-id');
+            swal({
+                title: "Are you sure you want to delete this habit?",
+                text: "You will delete this!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "/api/habit/delete?id=" + id,
+                    }).done((data) => {
+                        $('#habit-' + id).fadeOut();
+                        swal("Deleted!", "Your task has been deleted", "success");
+                        console.log(data);
+                    }).fail((err) => {
+                        //Add notify in corner
+                        console.log(err);
+                    });
+                } else {
+                    swal("Cancelled", "Your to do task is still archived :)", "error");
+                }
+            });
+        });
+    }
+    function addOnActivateEvents() {
+        $(".habit-activate").click(function () {
+            let id = $(this).closest('[habit-id]').attr('habit-id');
+            swal({
+                title: "Are you sure you want to activate this habit?",
+                text: "You will activate this!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, activate it!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "/api/habit/activate?id=" + id,
+                    }).done((data) => {
+                        $('#habit-' + id).fadeOut();
+                        swal("Activated!", "Your task has been activate", "success");
+                        console.log(data);
+                    }).fail((err) => {
+                        //Add notify in corner
+                        console.log(err);
+                    });
+                } else {
+                    swal("Cancelled", "Your to do task is still archived :)", "error");
+                }
+            });
         });
     }
 
@@ -156,6 +221,7 @@ let habits = (() => {
     return {
         prepareModalAndLoad,
         preloadAllActiveHabits,
+        preloadAllArchivedHabits,
         prependOnHabitBoard,
         removeErrors
     }

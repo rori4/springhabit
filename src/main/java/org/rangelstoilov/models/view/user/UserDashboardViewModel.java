@@ -1,10 +1,12 @@
 package org.rangelstoilov.models.view.user;
 
-import org.rangelstoilov.entities.Challenge;
+import org.rangelstoilov.entities.User;
 
 import java.util.List;
 
 public class UserDashboardViewModel {
+
+    private String id;
 
     private String name;
 
@@ -24,11 +26,17 @@ public class UserDashboardViewModel {
 
     private Integer gold;
 
-    private List<Challenge> challengesCreated;
+    private List<User> challengesPending;
 
-    private List<Challenge> challengesAccepted;
+    private List<User> challengesAccepted;
 
-    private List<Challenge> challengesJudging;
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return this.name;
@@ -102,27 +110,19 @@ public class UserDashboardViewModel {
         this.maxHealth = maxHealth;
     }
 
-    public List<Challenge> getChallengesCreated() {
-        return this.challengesCreated;
+    public List<User> getChallengesPending() {
+        return this.challengesPending;
     }
 
-    public void setChallengesCreated(List<Challenge> challengesCreated) {
-        this.challengesCreated = challengesCreated;
+    public void setChallengesPending(List<User> challengesPending) {
+        this.challengesPending = challengesPending;
     }
 
-    public List<Challenge> getChallengesAccepted() {
+    public List<User> getChallengesAccepted() {
         return this.challengesAccepted;
     }
 
-    public void setChallengesAccepted(List<Challenge> challengesAccepted) {
+    public void setChallengesAccepted(List<User> challengesAccepted) {
         this.challengesAccepted = challengesAccepted;
-    }
-
-    public List<Challenge> getChallengesJudging() {
-        return this.challengesJudging;
-    }
-
-    public void setChallengesJudging(List<Challenge> challengesJudging) {
-        this.challengesJudging = challengesJudging;
     }
 }

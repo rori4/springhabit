@@ -41,6 +41,15 @@
     <link th:href="@{~/assets/plugins/notyjs/themes/mint.css}" rel="stylesheet">
 </th:block>
 
+<th:block th:fragment="datatables" xmlns:th="http://www.thymeleaf.org">
+    <!-- DataTables -->
+    <link th:href="@{~/assets/plugins/datatables/jquery.dataTables.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{~/assets/plugins/datatables/buttons.bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{~/assets/plugins/datatables/fixedHeader.bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{~/assets/plugins/datatables/responsive.bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{~/assets/plugins/datatables/scroller.bootstrap.min.css}" rel="stylesheet" type="text/css" />
+</th:block>
+
 <th:block th:fragment="charts" xmlns:th="http://www.thymeleaf.org">
     <!--Morris Chart CSS -->
     <link rel="stylesheet" th:href="@{~/assets/plugins/morris/morris.css}">

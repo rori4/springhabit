@@ -6,7 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.rangelstoilov.custom.enums.Period;
-import org.rangelstoilov.custom.enums.Status;
+import org.rangelstoilov.custom.enums.TaskStatus;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class RecurringTask {
 
     @Column(nullable = false)
     @Enumerated
-    private Status status;
+    private TaskStatus taskStatus;
 
     @Column(nullable = false)
     @Enumerated
@@ -61,7 +61,7 @@ public class RecurringTask {
     public RecurringTask() {
         this.count = 0;
         this.createdOn = new Date();
-        this.status = Status.ACTIVE;
+        this.taskStatus = TaskStatus.ACTIVE;
         this.recurringTaskStats = new ArrayList<>();
     }
 
@@ -113,12 +113,12 @@ public class RecurringTask {
         this.user = user;
     }
 
-    public Status getStatus() {
-        return this.status;
+    public TaskStatus getTaskStatus() {
+        return this.taskStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
     }
 
     public Period getResetPeriod() {

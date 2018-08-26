@@ -2,7 +2,7 @@ package org.rangelstoilov.services.recurringTask;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.rangelstoilov.custom.enums.Status;
+import org.rangelstoilov.custom.enums.TaskStatus;
 import org.rangelstoilov.entities.RecurringTask;
 import org.rangelstoilov.entities.User;
 import org.rangelstoilov.models.view.recurringTask.RecurringTaskModel;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -30,18 +31,24 @@ public class RecurringTaskServiceImpl implements RecurringTaskService {
     }
 
     @Override
+    public RecurringTaskModel findById(String id) {
+        return this.modelMapper.map(this.recurringTaskRepository.findRecurringTaskById(id),RecurringTaskModel.class);
+    }
+
+    @Override
     public RecurringTaskModel add(RecurringTaskModel recurringTaskModel, String userEmail) {
         User user = this.userService.findFirstByEmail(userEmail);
         RecurringTask recurringTask = this.modelMapper.map(recurringTaskModel, RecurringTask.class);
         recurringTask.setUser(user);
-        recurringTask.setOrderNumber(this.recurringTaskRepository.countAllByUserAndStatus(user, Status.ACTIVE)+ 1);
+        recurringTask.setOrderNumber(this.recurringTaskRepository.countAllByUserAndTaskStatus(user, TaskStatus.ACTIVE)+ 1);
         return this.modelMapper.map(this.recurringTaskRepository.save(recurringTask), RecurringTaskModel.class);
     }
 
     @Override
-    public List<RecurringTaskModel> getAllRecurringTasks(Status status, String userEmail) {
+    public List<RecurringTaskModel> getAllRecurringTasks(TaskStatus taskStatus, String userEmail) {
         User firstByEmail = this.userService.findFirstByEmail(userEmail);
-        List<RecurringTask> userToDos = this.recurringTaskRepository.findAllByStatusAndUser(status,firstByEmail);
+        List<RecurringTask> userToDos = this.recurringTaskRepository.findAllByTaskStatusAndUser(taskStatus,firstByEmail);
+        userToDos.sort(Comparator.comparing(RecurringTask::getOrderNumber));
         java.lang.reflect.Type targetListType = new TypeToken<List<RecurringTaskModel>>() {}.getType();
         return this.modelMapper.map(userToDos, targetListType);
     }
@@ -49,45 +56,57 @@ public class RecurringTaskServiceImpl implements RecurringTaskService {
     @Override
     public UserRewardModel markDone(String id, String userEmail) {
         RecurringTask recurringTaskById = this.recurringTaskRepository.findRecurringTaskById(id);
-        User user = this.userService.findFirstByEmail(userEmail);
-        if(recurringTaskById.getUser().getId().equals(user.getId())){
-            recurringTaskById.setOrderNumber(this.recurringTaskRepository.countAllByUserAndStatus(user,Status.DONE)+1);
-            recurringTaskById.setStatus(Status.DONE);
-            fixOrderOfElements(Status.ACTIVE, recurringTaskById.getOrderNumber());
-            recurringTaskById.setCount(recurringTaskById.getCount()+1);
-            this.recurringTaskRepository.save(recurringTaskById);
+        if(changeRecurringTaskStatus(userEmail, recurringTaskById, TaskStatus.DONE)){
             UserRewardModel userRewardModel = this.userService.rewardUserForTaskDone(userEmail, 1);
             return userRewardModel;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public RecurringTaskModel findById(String id) {
-        return this.modelMapper.map(this.recurringTaskRepository.findRecurringTaskById(id),RecurringTaskModel.class);
+        } else return null;
     }
 
     @Override
     public RecurringTaskModel archive(String id, String userEmail) {
         RecurringTask recurringTaskById = this.recurringTaskRepository.findRecurringTaskById(id);
-        User user = this.userService.findFirstByEmail(userEmail);
-        if(recurringTaskById.getUser().getId().equals(user.getId())){
-            recurringTaskById.setOrderNumber(this.recurringTaskRepository.countAllByUserAndStatus(user,Status.ARCHIVED)+1);
-            recurringTaskById.setStatus(Status.ARCHIVED);
-            fixOrderOfElements(Status.ACTIVE, recurringTaskById.getOrderNumber());
-            this.recurringTaskRepository.save(recurringTaskById);
+        if(changeRecurringTaskStatus(userEmail,recurringTaskById, TaskStatus.ARCHIVED)){
             return this.modelMapper.map(recurringTaskById,RecurringTaskModel.class);
-        }
-        return null;
+        } else return null;
     }
 
-    private void fixOrderOfElements(Status status, Integer orderNumber) {
-        List<RecurringTask> allByOrderNumberGreaterThan = this.recurringTaskRepository.findAllByStatusAndOrderNumberGreaterThan(status,orderNumber);
+    @Override
+    public RecurringTaskModel delete(String id, String userEmail) {
+        RecurringTask recurringTaskById = this.recurringTaskRepository.findRecurringTaskById(id);
+        if(changeRecurringTaskStatus(userEmail,recurringTaskById, TaskStatus.DELETED)){
+            return this.modelMapper.map(recurringTaskById,RecurringTaskModel.class);
+        } else return null;
+    }
+
+    @Override
+    public RecurringTaskModel activate(String id, String userEmail) {
+        RecurringTask recurringTaskById = this.recurringTaskRepository.findRecurringTaskById(id);
+        if(changeRecurringTaskStatus(userEmail,recurringTaskById, TaskStatus.ACTIVE)){
+            return this.modelMapper.map(recurringTaskById,RecurringTaskModel.class);
+        } else return null;
+    }
+
+    private boolean changeRecurringTaskStatus(String userEmail, RecurringTask recurringTaskById, TaskStatus taskStatus) {
+        User user = this.userService.findFirstByEmail(userEmail);
+        if(recurringTaskById.getUser().getId().equals(user.getId())){
+            Integer orderNumber = recurringTaskById.getOrderNumber();
+            TaskStatus recurringTaskByIdTaskStatus = recurringTaskById.getTaskStatus();
+            recurringTaskById.setOrderNumber(this.recurringTaskRepository.countAllByUserAndTaskStatus(user, taskStatus)+1);
+            recurringTaskById.setTaskStatus(taskStatus);
+            fixOrderOfElements(recurringTaskByIdTaskStatus, orderNumber);
+            recurringTaskById.setCount(recurringTaskById.getCount()+1);
+            this.recurringTaskRepository.save(recurringTaskById);
+            return true;
+        } else return false;
+    }
+
+    private void fixOrderOfElements(TaskStatus taskStatus, Integer orderNumber) {
+        List<RecurringTask> allByOrderNumberGreaterThan = this.recurringTaskRepository.findAllByTaskStatusAndOrderNumberGreaterThan(taskStatus,orderNumber);
         if (!allByOrderNumberGreaterThan.isEmpty()){
             for (RecurringTask element : allByOrderNumberGreaterThan) {
                 element.setOrderNumber(element.getOrderNumber()-1);
             }
         }
+        this.recurringTaskRepository.saveAll(allByOrderNumberGreaterThan);
     }
 }

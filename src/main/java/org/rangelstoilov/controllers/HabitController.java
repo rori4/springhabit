@@ -1,7 +1,7 @@
 package org.rangelstoilov.controllers;
 
 import com.google.gson.Gson;
-import org.rangelstoilov.custom.enums.Status;
+import org.rangelstoilov.custom.enums.TaskStatus;
 import org.rangelstoilov.models.view.habit.HabitModel;
 import org.rangelstoilov.models.view.user.UserRewardModel;
 import org.rangelstoilov.services.habit.HabitService;
@@ -53,7 +53,7 @@ public class HabitController extends BaseController {
     @GetMapping(value = "/api/habit")
     @ResponseBody
     public String getAllHabits(@RequestParam String status,Principal principal) {
-        List<HabitModel> result = this.habitService.getAllHabitsOrdered(Status.valueOf(status), principal.getName());
+        List<HabitModel> result = this.habitService.getAllHabitsOrdered(TaskStatus.valueOf(status), principal.getName());
         return this.gson.toJson(result);
     }
 
@@ -94,6 +94,26 @@ public class HabitController extends BaseController {
     @ResponseBody
     public ResponseEntity<?> archive(@RequestParam String id, Principal principal){
         HabitModel result = habitService.archive(id, principal.getName());
+        if (result != null){
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Something went wrong when archiving yor task", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/api/habit/delete")
+    @ResponseBody
+    public ResponseEntity<?> delete(@RequestParam String id, Principal principal){
+        HabitModel result = habitService.delete(id, principal.getName());
+        if (result != null){
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Something went wrong when archiving yor task", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/api/habit/activate")
+    @ResponseBody
+    public ResponseEntity<?> activate(@RequestParam String id, Principal principal){
+        HabitModel result = habitService.activate(id, principal.getName());
         if (result != null){
             return new ResponseEntity<>(result, HttpStatus.OK);
         }

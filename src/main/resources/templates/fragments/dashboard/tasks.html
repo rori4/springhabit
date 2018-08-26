@@ -8,12 +8,8 @@
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="javascript:void(0)" onclick="todo.preloadActiveToDoTasks()">Show All Active</a></li>
-                        <li><a href="javascript:void(0)">Show All Completed</a></li>
+                        <li><a href="javascript:void(0)" onclick="todo.preloadCompletedToDoTasks()">Show All Completed</a></li>
                         <li><a href="javascript:void(0)" onclick="todo.preloadArchivedToDoTasks()">Show All Archived</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Archive All Active</a></li>
-                        <li><a href="#">Archive All Completed</a></li>
-                        <li><a href="#">Delete All Archived</a></li>
                     </ul>
                 </div>
                 <span class="label label-success m-r-10 label-status" id="todo-status"></span>
@@ -40,11 +36,8 @@
                         <i class="zmdi zmdi-more-vert"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
+                        <li><a href="javascript:void(0)" onclick="habits.preloadAllActiveHabits()">Show All Active</a></li>
+                        <li><a href="javascript:void(0)" onclick="habits.preloadAllArchivedHabits()">Show All Archived</a></li>
                     </ul>
                 </div>
                 <span class="label label-success m-r-10 label-status" id="habit-status"></span>
@@ -71,11 +64,9 @@
                         <i class="zmdi zmdi-more-vert"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
+                        <li><a href="javascript:void(0)" onclick="recurring.preloadActiveRecurringTasks()">Show All Active</a></li>
+                        <li><a href="javascript:void(0)" onclick="recurring.preloadCompletedRecurringTasks()">Show All Completed</a></li>
+                        <li><a href="javascript:void(0)" onclick="recurring.preloadArchivedRecurringTasks()">Show All Archived</a></li>
                     </ul>
                 </div>
                 <span class="label label-success m-r-10 label-status" id="recurring-status"></span>

@@ -1,6 +1,6 @@
 package org.rangelstoilov.services.habit;
 
-import org.rangelstoilov.custom.enums.Status;
+import org.rangelstoilov.custom.enums.TaskStatus;
 import org.rangelstoilov.models.view.habit.HabitModel;
 import org.rangelstoilov.models.view.user.UserRewardModel;
 
@@ -16,5 +16,9 @@ public interface HabitService {
 
     HabitModel archive(String id, String userEmail);
 
-    List<HabitModel> getAllHabitsOrdered(Status status, String userEmail);
+    HabitModel delete(String id, String userEmail);
+
+    HabitModel activate(String id, String userEmail);
+
+    List<HabitModel> getAllHabitsOrdered(TaskStatus taskStatus, String userEmail);
 }

@@ -1,6 +1,7 @@
 package org.rangelstoilov.services.user;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.rangelstoilov.entities.Role;
 import org.rangelstoilov.entities.User;
 import org.rangelstoilov.models.view.user.UserDashboardViewModel;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -40,7 +42,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(
                 this.passwordEncoder.encode(userViewModel.getPassword())
         );
-        this.roleService.addUserAndAdminRoleIfNotExistant();
+        this.roleService.addUserAndAdminRoleIfNotExist();
         Role role = this.roleService.findFirstByName("USER");
         role.getUsers().add(user);
         user.getRoles().add(role);
@@ -51,7 +53,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
 
-
     @Override
     public boolean userExists(String email) {
         return this.userRepository.findFirstByEmail(email) != null;
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDashboardViewModel getUserDashboardDataByEmail(String email) {
-        return modelMapper.map(userRepository.findFirstByEmail(email),UserDashboardViewModel.class);
+        return modelMapper.map(userRepository.findFirstByEmail(email), UserDashboardViewModel.class);
     }
 
     @Override
@@ -73,30 +74,30 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserRewardModel rewardUserForTaskDone(String email, Integer streakMultiplier){
+    public UserRewardModel rewardUserForTaskDone(String email, Integer streakMultiplier) {
         UserRewardModel userRewardModel = new UserRewardModel();
         User user = this.userRepository.findFirstByEmail(email);
 
         //This will determine the exp reward multiplier
-        Integer rewardMultiplier = BASE_REWARD_MULTIPLIER*user.getLevel();
+        Integer rewardMultiplier = BASE_REWARD_MULTIPLIER * user.getLevel();
 
         //Possible rewards
-        Integer exp = rewardMultiplier*streakMultiplier;
-        Integer gold = rewardMultiplier/2*streakMultiplier;
+        Integer exp = rewardMultiplier * streakMultiplier;
+        Integer gold = rewardMultiplier / 2 * streakMultiplier;
 
         //Setting the user reward model values
         userRewardModel.setExperience(exp);
         userRewardModel.setGold(gold);
 
         //When leveling up
-        if(user.getExperience()+exp >= user.getNextLevelExp()){
+        if (user.getExperience() + exp >= user.getNextLevelExp()) {
             userRewardModel.setLevel(1);
             userRewardModel.setHealth(user.getMaxHealth());
             user.levelUp();
             //Setting user entity valus
         }
-        user.setExperience(user.getExperience()+exp);
-        user.setGold(user.getGold()+gold);
+        user.setExperience(user.getExperience() + exp);
+        user.setGold(user.getGold() + gold);
 
         this.userRepository.save(user);
         return userRewardModel;
@@ -106,10 +107,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserRewardModel damageUserForTaskNotDone(String email, Integer streakMultiplier) {
         UserRewardModel userRewardModel = new UserRewardModel();
         User user = this.userRepository.findFirstByEmail(email);
-        Integer damage = user.getMaxHealth()/20;
+        Integer damage = user.getMaxHealth() / 20;
         userRewardModel.setHealth(-damage);
-        user.setHealth(user.getHealth()-damage);
-        if (user.getHealth()-damage<=0){
+        user.setHealth(user.getHealth() - damage);
+        if (user.getHealth() - damage <= 0) {
             userRewardModel.setLevel(-1);
             user.dead();
         }
@@ -120,6 +121,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User findFirstByEmail(String userEmail) {
         return userRepository.findFirstByEmail(userEmail);
+    }
+
+    @Override
+    public List<UserDashboardViewModel> getAllUsers() {
+        List<User> all = this.userRepository.findAll();
+        all.sort((u1,u2)-> u2.getGold().compareTo(u1.getGold()));
+        java.lang.reflect.Type allUserType = new TypeToken<List<UserDashboardViewModel>>() {
+        }.getType();
+        return this.modelMapper.map(all, allUserType);
+    }
+
+    @Override
+    public User findFirstById(String id) {
+        return this.userRepository.findFirstById(id);
     }
 
 }

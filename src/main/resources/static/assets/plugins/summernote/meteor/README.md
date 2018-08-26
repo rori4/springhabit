@@ -1,4 +1,4 @@
-Build + Meteor status: [![Build Status](https://travis-ci.org/MeteorPackaging/summernote.svg?branch=meteor-integration)](https://github.com/MeteorPackaging/summernote/tree/meteor-integration/meteor)
+Build + Meteor taskStatus: [![Build Status](https://travis-ci.org/MeteorPackaging/summernote.svg?branch=meteor-integration)](https://github.com/MeteorPackaging/summernote/tree/meteor-integration/meteor)
 
 Packaging [summernote](http://summernote.org/) for [Meteor.js](http://meteor.com).
 

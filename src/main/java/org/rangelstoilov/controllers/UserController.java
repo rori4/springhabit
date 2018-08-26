@@ -1,6 +1,5 @@
 package org.rangelstoilov.controllers;
 
-import com.google.gson.Gson;
 import org.rangelstoilov.models.view.user.UserDashboardViewModel;
 import org.rangelstoilov.models.view.user.UserRegisterModel;
 import org.rangelstoilov.services.user.UserService;
@@ -21,7 +20,7 @@ import java.security.Principal;
 public class UserController extends BaseController {
     private final UserService userService;
 
-    public UserController(UserService userService, Gson gson) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 

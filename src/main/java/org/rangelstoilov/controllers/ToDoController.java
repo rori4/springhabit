@@ -1,7 +1,7 @@
 package org.rangelstoilov.controllers;
 
 import com.google.gson.Gson;
-import org.rangelstoilov.custom.enums.Status;
+import org.rangelstoilov.custom.enums.TaskStatus;
 import org.rangelstoilov.models.view.todo.ToDoModel;
 import org.rangelstoilov.models.view.user.UserRewardModel;
 import org.rangelstoilov.services.todo.ToDoService;
@@ -53,7 +53,7 @@ public class ToDoController extends BaseController {
     @GetMapping(value = "/api/todo")
     @ResponseBody
     public String profile(@RequestParam String status,Principal principal) {
-        List<ToDoModel> result = this.toDoService.getAllToDos(Status.valueOf(status), principal.getName());
+        List<ToDoModel> result = this.toDoService.getAllToDos(TaskStatus.valueOf(status), principal.getName());
         result.sort(Comparator.comparing(ToDoModel::getOrderNumber));
         return
                 this.gson.toJson(result);
@@ -72,10 +72,20 @@ public class ToDoController extends BaseController {
         return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping(value = "/api/todo/activate")
+    @ResponseBody
+    public ResponseEntity<?> activate(@RequestParam String id, Principal principal){
+        ToDoModel result = toDoService.activate(id, principal.getName());
+        if(result != null){
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
+    }
+
     @PostMapping(value = "/api/todo/done")
     @ResponseBody
-    public ResponseEntity<?> markDone(@RequestParam String id, Principal principal){
-        UserRewardModel result = this.toDoService.markDone(id, principal.getName());
+    public ResponseEntity<?> done(@RequestParam String id, Principal principal){
+        UserRewardModel result = this.toDoService.done(id, principal.getName());
         if(result != null){
             return new ResponseEntity<>(result, HttpStatus.CREATED);
         }
@@ -86,6 +96,16 @@ public class ToDoController extends BaseController {
     @ResponseBody
     public ResponseEntity<?> archive(@RequestParam String id, Principal principal){
         ToDoModel result = toDoService.archive(id, principal.getName());
+        if (result != null){
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Something went wrong when adding yor task", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/api/todo/delete")
+    @ResponseBody
+    public ResponseEntity<?> delete(@RequestParam String id, Principal principal){
+        ToDoModel result = toDoService.delete(id, principal.getName());
         if (result != null){
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
