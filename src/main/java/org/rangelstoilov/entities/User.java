@@ -69,16 +69,37 @@ public class User  implements UserDetails {
     private List<Habit> habits;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "challenger", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Challenge> challengesCreated;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "challenges_send",
+            joinColumns = { @JoinColumn(name = "challenger_id") },
+            inverseJoinColumns = { @JoinColumn(name = "opponent_id") })
+    private List<User> challengesSend;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "opponent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Challenge> challengesAccepted;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "challenges_pending",
+            joinColumns = { @JoinColumn(name = "challenged_id") },
+            inverseJoinColumns = { @JoinColumn(name = "opponent_id") })
+    private List<User> challengesPending;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "judge", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Challenge> challengesJudging;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "challenges_accepted",
+            joinColumns = { @JoinColumn(name = "challenger_id") },
+            inverseJoinColumns = { @JoinColumn(name = "opponent_id") })
+    private List<User> challengesAccepted;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
@@ -92,9 +113,9 @@ public class User  implements UserDetails {
         this.todos = new ArrayList<>();
         this.recurringTasks = new ArrayList<>();
         this.habits = new ArrayList<>();
-        this.challengesCreated = new ArrayList<>();
+        this.challengesSend = new ArrayList<>();
+        this.challengesPending = new ArrayList<>();
         this.challengesAccepted = new ArrayList<>();
-        this.challengesJudging = new ArrayList<>();
         this.roles = new ArrayList<>();
     }
 
@@ -174,28 +195,28 @@ public class User  implements UserDetails {
         this.habits = habits;
     }
 
-    public List<Challenge> getChallengesCreated() {
-        return this.challengesCreated;
+    public List<User> getChallengesSend() {
+        return this.challengesSend;
     }
 
-    public void setChallengesCreated(List<Challenge> challengesCreated) {
-        this.challengesCreated = challengesCreated;
+    public void setChallengesSend(List<User> challengesSend) {
+        this.challengesSend = challengesSend;
     }
 
-    public List<Challenge> getChallengesAccepted() {
+    public List<User> getChallengesPending() {
+        return this.challengesPending;
+    }
+
+    public void setChallengesPending(List<User> challengesPending) {
+        this.challengesPending = challengesPending;
+    }
+
+    public List<User> getChallengesAccepted() {
         return this.challengesAccepted;
     }
 
-    public void setChallengesAccepted(List<Challenge> challengesAccepted) {
+    public void setChallengesAccepted(List<User> challengesAccepted) {
         this.challengesAccepted = challengesAccepted;
-    }
-
-    public List<Challenge> getChallengesJudging() {
-        return this.challengesJudging;
-    }
-
-    public void setChallengesJudging(List<Challenge> challengesJudging) {
-        this.challengesJudging = challengesJudging;
     }
 
     public Integer getGold() {
@@ -242,6 +263,22 @@ public class User  implements UserDetails {
         this.setMaxHealth(Math.max(BASE_HEALTH,this.getMaxHealth()/2));
         this.setHealth(this.getMaxHealth());
         this.setGold(this.getGold()/2);
+    }
+
+    public Integer getChallengersMaxHealth() {
+        return this.challengesAccepted.stream().mapToInt(User::getMaxHealth).sum();
+    }
+
+    public Integer getChallengersCurrentHealth() {
+        return this.challengesAccepted.stream().mapToInt(User::getHealth).sum();
+    }
+
+    public Integer getChallengersHealthPercentage() {
+        if (getChallengersMaxHealth() != 0) {
+            return (this.getChallengersCurrentHealth()/this.getChallengersMaxHealth())*100;
+        } else {
+            return 0;
+        }
     }
 
     @Override

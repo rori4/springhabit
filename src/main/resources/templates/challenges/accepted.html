@@ -37,7 +37,7 @@
                     <th>Health</th>
                     <th>Gold</th>
                     <th>Fighting</th>
-                    <th>Action</th>
+                    <th>Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,13 +51,10 @@
                         <td th:text="${user.getGold()}">Gold</td>
                         <td th:text="${user.getChallengesAccepted().size()}">Fighting</td>
                         <td>
-                            <button type="button" class="btn btn-success btn-xs btn-rounded w-md waves-effect waves-light m-b-5 challenge-approve">
-                                Approve Challenge
-                                <i class="fa fa-check"></i>
-                            </button>
-                            <button type="button" class="btn btn-danger btn-xs btn-rounded w-md waves-effect waves-light m-b-5 challenge-decline">
-                                Decline Challenge
-                                <i class="fa fa-times"></i>
+                            <button type="button"
+                                    class="btn btn-danger btn-xs btn-rounded w-md waves-effect waves-light m-b-5">
+                                Fighting
+                                <i class="fa fa-bolt"></i>
                             </button>
                         </td>
                     </tr>
@@ -107,7 +104,6 @@
     <script>
         $('#datatable-users').DataTable();
     </script>
-    <script th:src="@{~/assets/pages/jquery.challenge.js}"></script>
 </th:block>
 </body>
 </html>

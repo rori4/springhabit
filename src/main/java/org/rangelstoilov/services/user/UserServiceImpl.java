@@ -10,6 +10,7 @@ import org.rangelstoilov.models.view.user.UserRewardModel;
 import org.rangelstoilov.repositories.UserRepository;
 import org.rangelstoilov.services.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class  UserServiceImpl implements UserService, UserDetailsService {
     private static final int BASE_REWARD_MULTIPLIER = 100;
     private final UserRepository userRepository;
     private final RoleService roleService;
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public UserDashboardViewModel getUserDashboardDataByEmail(String email) {
         return modelMapper.map(userRepository.findFirstByEmail(email), UserDashboardViewModel.class);
     }
@@ -74,6 +76,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public UserRewardModel rewardUserForTaskDone(String email, Integer streakMultiplier) {
         UserRewardModel userRewardModel = new UserRewardModel();
         User user = this.userRepository.findFirstByEmail(email);
@@ -104,6 +107,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public UserRewardModel damageUserForTaskNotDone(String email, Integer streakMultiplier) {
         UserRewardModel userRewardModel = new UserRewardModel();
         User user = this.userRepository.findFirstByEmail(email);
@@ -119,22 +123,158 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public User findFirstByEmail(String userEmail) {
         return userRepository.findFirstByEmail(userEmail);
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public List<UserDashboardViewModel> getAllUsers() {
         List<User> all = this.userRepository.findAll();
-        all.sort((u1,u2)-> u2.getGold().compareTo(u1.getGold()));
+        all.sort((u1, u2) -> u2.getGold().compareTo(u1.getGold()));
         java.lang.reflect.Type allUserType = new TypeToken<List<UserDashboardViewModel>>() {
         }.getType();
         return this.modelMapper.map(all, allUserType);
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public User findFirstById(String id) {
         return this.userRepository.findFirstById(id);
     }
 
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public List<UserDashboardViewModel> getChallengesSent(String userEmail) {
+        User firstByEmail = this.userRepository.findFirstByEmail(userEmail);
+        List<User> challengesSend = firstByEmail.getChallengesSend();
+        challengesSend.sort((u1, u2) -> u2.getGold().compareTo(u1.getGold()));
+        java.lang.reflect.Type targetListType = new TypeToken<List<UserDashboardViewModel>>() {
+        }.getType();
+        return this.modelMapper.map(challengesSend, targetListType);
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public List<UserDashboardViewModel> getChallengesPending(String userEmail) {
+        User firstByEmail = this.userRepository.findFirstByEmail(userEmail);
+        List<User> challengesPending = firstByEmail.getChallengesPending();
+        challengesPending.sort((u1, u2) -> u2.getGold().compareTo(u1.getGold()));
+        java.lang.reflect.Type targetListType = new TypeToken<List<UserDashboardViewModel>>() {
+        }.getType();
+        return this.modelMapper.map(challengesPending, targetListType);
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public List<UserDashboardViewModel> getChallengesAccepted(String userEmail) {
+        User firstByEmail = this.userRepository.findFirstByEmail(userEmail);
+        List<User> challengesAccepted = firstByEmail.getChallengesAccepted();
+        challengesAccepted.sort((u1, u2) -> u2.getGold().compareTo(u1.getGold()));
+        java.lang.reflect.Type targetListType = new TypeToken<List<UserDashboardViewModel>>() {
+        }.getType();
+        return this.modelMapper.map(challengesAccepted, targetListType);
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public UserDashboardViewModel sendChallenge(String id, String userEmail) {
+        User currentUser = this.userRepository.findFirstByEmail(userEmail);
+        User challenged = this.userRepository.findFirstById(id);
+        //Challenger side CHALLENGES SENDyas
+        List<User> currentUserChallengesSend = currentUser.getChallengesSend();
+        currentUserChallengesSend.add(challenged);
+        currentUser.setChallengesSend(currentUserChallengesSend);
+        //User that is challenged PENDING side
+        List<User> challengesPending = challenged.getChallengesPending();
+        challengesPending.add(currentUser);
+        challenged.setChallengesPending(challengesPending);
+        //Save
+        this.userRepository.save(challenged);
+        this.userRepository.save(currentUser);
+        //Return model
+        return this.modelMapper.map(currentUser,UserDashboardViewModel.class);
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public UserDashboardViewModel approveChallenge(String id, String userEmail) {
+        User currentUser = this.userRepository.findFirstByEmail(userEmail);
+        User challenger = currentUser.getChallengesPending().stream()
+                .filter(u -> id.equals(u.getId()))
+                .findFirst()
+                .orElse(null);
+        if (challenger != null) {
+            //Remove from pending/sent
+            currentUser.getChallengesPending().remove(challenger);
+            challenger.getChallengesSend().remove(currentUser);
+            //Current user add approved
+            List<User> currentUserChallengesAccepted = currentUser.getChallengesAccepted();
+            currentUserChallengesAccepted.add(challenger);
+            currentUser.setChallengesAccepted(currentUserChallengesAccepted);
+            //Challenger add approved
+            List<User> challengerChallengesAccepted = challenger.getChallengesAccepted();
+            challengerChallengesAccepted.add(currentUser);
+            challenger.setChallengesAccepted(challengerChallengesAccepted);
+            //Save and return
+            this.userRepository.save(challenger);
+            this.userRepository.save(currentUser);
+            return this.modelMapper.map(currentUser,UserDashboardViewModel.class);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public UserDashboardViewModel cancelChallenge(String id, String userEmail) {
+        User currentUser = this.userRepository.findFirstByEmail(userEmail);
+        User challenger = currentUser.getChallengesSend().stream()
+                .filter(u -> id.equals(u.getId()))
+                .findFirst()
+                .orElse(null);
+        if (challenger != null) {
+            currentUser.getChallengesSend().remove(challenger);
+            challenger.getChallengesPending().remove(currentUser);
+            this.userRepository.save(challenger);
+            this.userRepository.save(currentUser);
+            return this.modelMapper.map(currentUser,UserDashboardViewModel.class);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public UserDashboardViewModel declineChallenge(String id, String userEmail) {
+        User currentUser = this.userRepository.findFirstByEmail(userEmail);
+        User challenger = currentUser.getChallengesPending().stream()
+                .filter(u -> id.equals(u.getId()))
+                .findFirst()
+                .orElse(null);
+        if (challenger != null) {
+            currentUser.getChallengesPending().remove(challenger);
+            challenger.getChallengesSend().remove(currentUser);
+            this.userRepository.save(currentUser);
+            this.userRepository.save(challenger);
+            return this.modelMapper.map(currentUser, UserDashboardViewModel.class);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    public List<UserDashboardViewModel> getAllUserAvailableToChallenge(String userEmail) {
+        List<User> all = this.userRepository.findAll();
+        User firstByEmail = this.userRepository.findFirstByEmail(userEmail);
+        all.removeAll(firstByEmail.getChallengesPending());
+        all.removeAll(firstByEmail.getChallengesSend());
+        all.removeAll(firstByEmail.getChallengesAccepted());
+        all.sort((u1, u2) -> u2.getGold().compareTo(u1.getGold()));
+        java.lang.reflect.Type allUserType = new TypeToken<List<UserDashboardViewModel>>() {
+        }.getType();
+        return this.modelMapper.map(all, allUserType);
+    }
 }
