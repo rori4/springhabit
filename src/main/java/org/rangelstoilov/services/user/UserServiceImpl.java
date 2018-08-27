@@ -18,12 +18,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional
 public class  UserServiceImpl implements UserService, UserDetailsService {
     private static final int BASE_REWARD_MULTIPLIER = 100;
+    public static final int BASE_DMG_MULTIPLIER = 20;
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
@@ -83,7 +85,7 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
 
         //This will determine the exp reward multiplier
         Integer rewardMultiplier = BASE_REWARD_MULTIPLIER * user.getLevel();
-
+        Integer damage = user.getMaxHealth()/BASE_DMG_MULTIPLIER;
         //Possible rewards
         Integer exp = rewardMultiplier * streakMultiplier;
         Integer gold = rewardMultiplier / 2 * streakMultiplier;
@@ -91,6 +93,31 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
         //Setting the user reward model values
         userRewardModel.setExperience(exp);
         userRewardModel.setGold(gold);
+
+        //Handle challengers fight
+        List<User> challengesAccepted = user.getChallengesAccepted();
+        if(!challengesAccepted.isEmpty()){
+            Integer singleChallengerDmg = damage/challengesAccepted.size();
+            List<User> deadChallengers = new ArrayList<>();
+            for (User challenger : challengesAccepted) {
+                if (challenger.getHealth() - singleChallengerDmg <= 0) {
+                    int challengerGold = challenger.getGold() / 2;
+                    challenger.dead();
+                    List<User> challengerChallengesAccepted = challenger.getChallengesAccepted();
+                    challengerChallengesAccepted.remove(user);
+                    challenger.setChallengesAccepted(challengerChallengesAccepted);
+                    deadChallengers.add(challenger);
+                    user.setGold(user.getGold()+challengerGold);
+                    userRewardModel.setGold(userRewardModel.getGold()+challengerGold);
+                    userRewardModel.setKills(userRewardModel.getKills()+1);
+                }
+                challenger.setHealth(challenger.getHealth()-singleChallengerDmg);
+            }
+            this.userRepository.saveAll(challengesAccepted);
+            challengesAccepted.removeAll(deadChallengers);
+            user.setChallengesAccepted(challengesAccepted);
+        }
+
 
         //When leveling up
         if (user.getExperience() + exp >= user.getNextLevelExp()) {
@@ -111,7 +138,7 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     public UserRewardModel damageUserForTaskNotDone(String email, Integer streakMultiplier) {
         UserRewardModel userRewardModel = new UserRewardModel();
         User user = this.userRepository.findFirstByEmail(email);
-        Integer damage = user.getMaxHealth() / 20;
+        Integer damage = user.getMaxHealth() / BASE_DMG_MULTIPLIER;
         userRewardModel.setHealth(-damage);
         user.setHealth(user.getHealth() - damage);
         if (user.getHealth() - damage <= 0) {
@@ -182,7 +209,7 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     public UserDashboardViewModel sendChallenge(String id, String userEmail) {
         User currentUser = this.userRepository.findFirstByEmail(userEmail);
         User challenged = this.userRepository.findFirstById(id);
-        //Challenger side CHALLENGES SENDyas
+        //Challenger side CHALLENGES SEND
         List<User> currentUserChallengesSend = currentUser.getChallengesSend();
         currentUserChallengesSend.add(challenged);
         currentUser.setChallengesSend(currentUserChallengesSend);

@@ -43,7 +43,7 @@
                 </thead>
                 <tbody>
                 <th:block th:each="user,iterStat : ${users}">
-                    <tr th:id="${user.getId()}">
+                    <tr>
                         <td th:text="${iterStat.count}">#</td>
                         <td th:text="${user.getEmail()}">Email</td>
                         <td th:text="${user.getName()}">Name</td>
@@ -52,7 +52,7 @@
                         <td th:text="${user.getGold()}">Gold</td>
                         <td th:text="${user.getChallengesAccepted().size()}">Fighting</td>
                         <td>
-                            <button type="button"
+                            <button th:attr="usr-id=${user.getId()}" type="button"
                                     class="btn btn-danger btn-xs btn-rounded w-md waves-effect waves-light m-b-5 challenge-cancel">
                                 Cancel Request
                                 <i class="fa fa-times"></i>
@@ -83,17 +83,22 @@
 
             <div class="widget-box-2">
                 <div class="widget-detail-2">
-                    <span class="badge badge-pink pull-left m-t-20" th:utext="${#authentication.principal.getChallengersHealthPercentage()}+'%'"></span>
-                    <h2 id="challenge-data" class="m-b-0" th:text="${#authentication.principal.getChallengesAccepted().size()}"> </h2>
-                    <h4 class="m-b-0" th:text="|Total Current health: ${#authentication.principal.getChallengersCurrentHealth()}|"> </h4>
-                    <p class="m-b-0" th:text="|Total Max health: ${#authentication.principal.getChallengersMaxHealth()}|"> </p>
+                    <span class="badge badge-pink pull-left m-t-20"
+                          th:utext="${#authentication.principal.getChallengersHealthPercentage()}+'%'"></span>
+                    <h2 id="challenge-data" class="m-b-0"
+                        th:text="${#authentication.principal.getChallengesAccepted().size()}"></h2>
+                    <h4 class="m-b-0"
+                        th:text="|Total Current health: ${#authentication.principal.getChallengersCurrentHealth()}|"></h4>
+                    <p class="m-b-0"
+                       th:text="|Total Max health: ${#authentication.principal.getChallengersMaxHealth()}|"></p>
                 </div>
                 <div class="progress progress-bar-pink-alt progress-sm m-b-0">
                     <div class="progress-bar progress-bar-pink" role="progressbar"
                          th:attr="aria-valuenow=${#authentication.principal.getChallengersHealthPercentage()}"
                          th:style="'width:'+${#authentication.principal.getChallengersHealthPercentage()}+'%'"
-                         aria-valuemin="0" aria-valuemax="100" >
-                        <span class="sr-only" th:text="${#authentication.principal.getChallengersHealthPercentage()}"></span>
+                         aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only"
+                              th:text="${#authentication.principal.getChallengersHealthPercentage()}"></span>
                     </div>
                 </div>
             </div>

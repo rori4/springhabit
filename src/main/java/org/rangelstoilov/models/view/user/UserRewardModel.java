@@ -10,6 +10,12 @@ public class UserRewardModel {
 
     private  Integer gold;
 
+    private  Integer kills;
+
+    public UserRewardModel() {
+        this.kills = 0;
+    }
+
     public Integer getLevel() {
         return this.level;
     }
@@ -40,5 +46,13 @@ public class UserRewardModel {
 
     public void setGold(Integer gold) {
         this.gold = gold;
+    }
+
+    public Integer getKills() {
+        return this.kills;
+    }
+
+    public void setKills(Integer kills) {
+        this.kills = kills;
     }
 }

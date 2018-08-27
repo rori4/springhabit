@@ -42,7 +42,7 @@
                 </thead>
                 <tbody>
                 <th:block th:each="user,iterStat : ${users}">
-                    <tr th:id="${user.getId()}">
+                    <tr>
                         <td th:text="${iterStat.count}">#</td>
                         <td th:text="${user.getEmail()}">Email</td>
                         <td th:text="${user.getName()}">Name</td>
@@ -51,7 +51,7 @@
                         <td th:text="${user.getGold()}">Gold</td>
                         <td th:text="${user.getChallengesAccepted().size()}">Fighting</td>
                         <td>
-                            <button type="button"
+                            <button th:attr="usr-id=${user.getId()}" type="button"
                                     class="btn btn-danger btn-xs btn-rounded w-md waves-effect waves-light m-b-5">
                                 Fighting
                                 <i class="fa fa-bolt"></i>

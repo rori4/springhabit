@@ -22,7 +22,7 @@ public class UserRegisterModel {
 
     @NotNull
     @NotEmpty
-    @ValidPassword(message = "Password must be valid")
+    @ValidPassword(message = "The password must be between 8 and 30 symbols and contain one upper-case, one lower-case and one digit (no whitespaces)")
     private String password;
 
     public String getEmail() {

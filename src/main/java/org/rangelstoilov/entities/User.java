@@ -266,7 +266,8 @@ public class User  implements UserDetails {
     }
 
     public Integer getChallengersMaxHealth() {
-        return this.challengesAccepted.stream().mapToInt(User::getMaxHealth).sum();
+        int sum = this.challengesAccepted.stream().mapToInt(User::getMaxHealth).sum();
+        return sum;
     }
 
     public Integer getChallengersCurrentHealth() {

@@ -45,7 +45,7 @@
                 <!--/*@thymesVar id="user" type="org.rangelstoilov.entities.User"*/-->
                 <th:block th:each="user,iterStat : ${users}">
                     <th:block th:unless="${#authentication.principal.getName().equals(user.getName())}">
-                        <tr th:id="${user.getId()}">
+                        <tr >
                             <td th:text="${iterStat.count}">#</td>
                             <td th:text="${user.getEmail()}">Email</td>
                             <td th:text="${user.getName()}">Name</td>
@@ -54,8 +54,8 @@
                             <td th:text="${user.getGold()}">Gold</td>
                             <td th:text="${user.getChallengesAccepted().size()}">Fighting</td>
                             <td>
-                                <button type="button"
-                                        class="btn btn-success btn-xs btn-rounded w-md waves-effect waves-light m-b-5 challenge">
+                                <button th:attr="usr-id=${user.getId()}" type="button"
+                                        class="btn btn-success btn-xs btn-rounded w-md waves-effect waves-light m-b-5 challenge" >
                                     Challenge
                                     <i class="fa fa-bolt"></i>
                                 </button>
