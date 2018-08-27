@@ -17,7 +17,7 @@ let challenge = (() => {
                 if (isConfirm) {
                     $.ajax({
                         type: 'POST',
-                        url: "/api/challenge?id=" + id,
+                        url: "/api/challenge/send?id=" + id,
                     }).done((data) => {
                         console.log(data);
                         if(row.hasClass('child')){
@@ -26,6 +26,7 @@ let challenge = (() => {
                             $(parentRow).fadeOut();
                         }
                         row.fadeOut();
+                        stats.updateChallengersStats();
                         swal("Challenged!", "Your opponent has been challenged. Let's wait to see if he will accept your challenge or is he cared 😱", "success");
                         console.log(data);
                     }).fail((err) => {
@@ -66,6 +67,7 @@ let challenge = (() => {
                             $(parentRow).fadeOut();
                         }
                         row.fadeOut();
+                        stats.updateChallengersStats();
                         swal("Challenged canceled!", "Your challenge request has been canceled. It seems you are scared 😱", "success");
                         console.log(data);
                     }).fail((err) => {
@@ -106,6 +108,7 @@ let challenge = (() => {
                             $(parentRow).fadeOut();
                         }
                         row.fadeOut();
+                        stats.updateChallengersStats();
                         swal("Challenged!", "Your opponent has been challenged. Let's wait to see if he will accept your challenge or is he cared 😱", "success");
                         console.log(data);
                     }).fail((err) => {
@@ -147,6 +150,7 @@ let challenge = (() => {
                             $(parentRow).fadeOut();
                         }
                         row.fadeOut();
+                        stats.updateChallengersStats();
                         swal("Challenged canceled!", "Your challenge request has been declined. It seems you are scared 😱", "success");
                         console.log(data);
                     }).fail((err) => {
@@ -167,7 +171,7 @@ let challenge = (() => {
         addOnDeclineClickEvent
     }
 })();
-
+stats.updateChallengersStats();
 challenge.addOnChallengeClickEvent();
 challenge.addOnApproveClickEvent();
 challenge.addOnCancelClickEvent();

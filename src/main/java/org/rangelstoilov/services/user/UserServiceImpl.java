@@ -110,8 +110,9 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
                     user.setGold(user.getGold()+challengerGold);
                     userRewardModel.setGold(userRewardModel.getGold()+challengerGold);
                     userRewardModel.setKills(userRewardModel.getKills()+1);
+                } else {
+                    challenger.setHealth(challenger.getHealth()-singleChallengerDmg);
                 }
-                challenger.setHealth(challenger.getHealth()-singleChallengerDmg);
             }
             this.userRepository.saveAll(challengesAccepted);
             challengesAccepted.removeAll(deadChallengers);

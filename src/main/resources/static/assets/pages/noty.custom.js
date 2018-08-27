@@ -1,5 +1,6 @@
 let noty = (() => {
     let timeout = 1000;
+    let timeoutSlow = 4000;
     function handleData(data) {
         Object.keys(data).forEach(function(reward){
             if(data[reward]!==null){
@@ -22,6 +23,11 @@ let noty = (() => {
                             levelNotification();
                         } else {
                             deadNotification();
+                        }
+                        break;
+                    case 'kills':
+                        if(data[reward] > 0) {
+                            killsNotification(data[reward]);
                         }
                         break;
                 }
@@ -70,6 +76,21 @@ let noty = (() => {
             }
         }).show()
     }
+
+    function killsNotification(data) {
+        new Noty({
+            text: '<div class="text-left">🏆 <strong>'+data+' kills </strong><br>You have killed '+data+' challengers and got from each half of their gold! CONGRATULATIONS!</div>',
+            type: 'information',
+            theme: 'mint',
+            layout: 'topRight',
+            timeout: timeoutSlow,
+            animation: {
+                open: mojsShow,
+                close: mojsClose
+            }
+        }).show()
+    }
+
 
     function expNotification(xp) {
         new Noty({

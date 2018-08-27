@@ -3,12 +3,15 @@ package org.rangelstoilov.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -265,26 +268,10 @@ public class User  implements UserDetails {
         this.setGold(this.getGold()/2);
     }
 
-    public Integer getChallengersMaxHealth() {
-        int sum = this.challengesAccepted.stream().mapToInt(User::getMaxHealth).sum();
-        return sum;
-    }
-
-    public Integer getChallengersCurrentHealth() {
-        return this.challengesAccepted.stream().mapToInt(User::getHealth).sum();
-    }
-
-    public Integer getChallengersHealthPercentage() {
-        if (getChallengersMaxHealth() != 0) {
-            return (this.getChallengersCurrentHealth()/this.getChallengersMaxHealth())*100;
-        } else {
-            return 0;
-        }
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Set<SimpleGrantedAuthority> collect = this.getRoles().stream().map(r -> new SimpleGrantedAuthority("ROLE_" + r.getName())).collect(Collectors.toSet());
+        return collect;
     }
 
     public String getPassword() {

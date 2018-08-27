@@ -95,7 +95,7 @@
                     </div>
                     <div class="widget-detail-1">
                         <h2 id="gold-data" class="p-t-10 m-b-0" th:text="${user.getGold()}"> 4569 </h2>
-                        <p class="text-muted">Gold earned today XXX</p>
+                        <p class="text-muted"><i class="fa fa-info"></i>  More gold will result in higher <a href="/leaderboard/users" th:class="text-warning">rankings</a></p>
                     </div>
                 </div>
             </div>
@@ -120,15 +120,15 @@
 
                 <div class="widget-box-2">
                     <div class="widget-detail-2">
-                        <span class="badge badge-pink pull-left m-t-20">32% <i class="zmdi zmdi-trending-up"></i> </span>
-                        <h2 id="challenge-data" class="m-b-0" th:text="dsa"> 158/200 </h2>
-                        <p class="text-muted m-b-25">Only for reaching the goal</p>
+                        <span id="challengerrs-health-percentage" class="badge badge-pink pull-left m-t-20"></span>
+                        <h2 id="challengers-count" class="m-b-0"> </h2>
+                        <h4 id="challengers-health" class="m-b-0 m-t-0"> </h4>
+                        <p id="challengers-max-health" class="m-b-0"> </p>
                     </div>
                     <div class="progress progress-bar-pink-alt progress-sm m-b-0">
-                        <div class="progress-bar progress-bar-pink" role="progressbar"
-                             aria-valuenow="77" aria-valuemin="0" aria-valuemax="100"
-                             style="width: 77%;">
-                            <span class="sr-only">77% Complete</span>
+                        <div id="challengers-data-bar" class="progress-bar progress-bar-pink" role="progressbar"
+                             aria-valuemin="0" aria-valuemax="100" >
+                            <span class="sr-only"></span>
                         </div>
                     </div>
                 </div>

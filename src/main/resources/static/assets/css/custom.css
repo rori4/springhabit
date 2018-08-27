@@ -27,7 +27,7 @@
     z-index: 20001;
 }
 
-.select2-drop-mask{
+.select2-drop-mask {
     z-index: 20000;
 }
 
@@ -35,10 +35,14 @@
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
-    display:         flex;
+    display: flex;
 }
 
 .label-status {
     display: inline-block;
-    float:left;
+    float: left;
+}
+
+.card-box {
+    min-height: 190px;
 }

@@ -125,4 +125,12 @@ public class UserDashboardViewModel {
     public void setChallengesAccepted(List<User> challengesAccepted) {
         this.challengesAccepted = challengesAccepted;
     }
+
+    public Integer getChallengersMaxHealth() {
+        return this.challengesAccepted.stream().mapToInt(User::getMaxHealth).sum();
+    }
+
+    public Integer getChallengersCurrentHealth() {
+        return this.challengesAccepted.stream().mapToInt(User::getHealth).sum();
+    }
 }

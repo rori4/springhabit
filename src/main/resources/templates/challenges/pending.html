@@ -85,17 +85,15 @@
 
             <div class="widget-box-2">
                 <div class="widget-detail-2">
-                    <span class="badge badge-pink pull-left m-t-20" th:utext="${#authentication.principal.getChallengersHealthPercentage()}+'%'"></span>
-                    <h2 id="challenge-data" class="m-b-0" th:text="${#authentication.principal.getChallengesAccepted().size()}"> </h2>
-                    <h4 class="m-b-0" th:text="|Total Current health: ${#authentication.principal.getChallengersCurrentHealth()}|"> </h4>
-                    <p class="m-b-0" th:text="|Total Max health: ${#authentication.principal.getChallengersMaxHealth()}|"> </p>
+                    <span id="challengerrs-health-percentage" class="badge badge-pink pull-left m-t-20"></span>
+                    <h2 id="challengers-count" class="m-b-0"> </h2>
+                    <h4 id="challengers-health" class="m-b-0 m-t-0"> </h4>
+                    <p id="challengers-max-health" class="m-b-0"> </p>
                 </div>
                 <div class="progress progress-bar-pink-alt progress-sm m-b-0">
-                    <div class="progress-bar progress-bar-pink" role="progressbar"
-                         th:attr="aria-valuenow=${#authentication.principal.getChallengersHealthPercentage()}"
-                         th:style="'width:'+${#authentication.principal.getChallengersHealthPercentage()}+'%'"
+                    <div id="challengers-data-bar" class="progress-bar progress-bar-pink" role="progressbar"
                          aria-valuemin="0" aria-valuemax="100" >
-                        <span class="sr-only" th:text="${#authentication.principal.getChallengersHealthPercentage()}"></span>
+                        <span class="sr-only"></span>
                     </div>
                 </div>
             </div>

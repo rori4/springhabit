@@ -13,7 +13,8 @@ let stats = (() => {
     }
 
     function updateElements(data){
-        console.log("WHAT I GET: " + data);
+        console.log("WHAT I GET: ");
+        console.log(data);
         //Level
 
         console.log('MIN: ' + data.levelStartExp);
@@ -32,7 +33,7 @@ let stats = (() => {
         $('#level-data-p').text(experienceLeft  + " experience until next level");
 
         //Health
-        let percentageHealth = (data.health/data.maxHealth)*100;
+        let percentageHealth = ((data.health/data.maxHealth)*100).toFixed(2);
         console.log(percentageHealth);
 
         $('#health-data-bar').attr('aria-valuenow', percentageHealth).css('width',percentageHealth+'%');
@@ -44,13 +45,38 @@ let stats = (() => {
         $('#gold-data').text(data.gold);
 
         //Challenger
-        $('#challenge-data').text(data.challengesAccepted.length);
+        statsForChallengers(data);
 
+    }
+
+    function updateChallengersStats() {
+        $.ajax({
+            type: 'GET',
+            url: "/api/user",
+        }).done((data) => {
+            console.log(data);
+            statsForChallengers(data);
+        }).fail((err) => {
+            console.log(err);
+        });
+    }
+
+    function statsForChallengers(data) {
+        let challengersPercentageHealth=0;
+        if(data.challengersMaxHealth !== 0){
+           challengersPercentageHealth = ((data.challengersCurrentHealth/data.challengersMaxHealth)*100).toFixed(2);
+        }
+        $('#challengerrs-health-percentage').text(challengersPercentageHealth+'%');
+        $('#challengers-count').text(data.challengesAccepted.length);
+        $('#challengers-health').text('Total health: ' + data.challengersCurrentHealth);
+        $('#challengers-max-health').text('Max health: ' + data.challengersMaxHealth);
+        $('#challengers-data-bar').attr('aria-valuenow', challengersPercentageHealth).css('width',challengersPercentageHealth+'%');
     }
 
 
     return {
-        reloadStats
+        reloadStats,
+        updateChallengersStats
     }
 })();
 

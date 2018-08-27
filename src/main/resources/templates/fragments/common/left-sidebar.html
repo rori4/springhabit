@@ -10,7 +10,7 @@
                     <img th:src="@{~/assets/images/users/avatar-1.jpg}" alt="user-img" th:title="${#authentication.principal.getName()}" class="img-circle img-thumbnail img-responsive">
                 </div>
                 <h4><a href="javascript:void(0);" th:text="${#authentication.principal.getName()}"></a> </h4>
-                <h6 th:text="${#authentication.principal.getRoles().get(0).getName()}"></h6>
+                <h6 th:text="${#authentication.principal.getRoles().get(#authentication.principal.getRoles().size() - 1).getName()}"></h6>
                 <ul class="list-inline">
                     <li>
                         <a href="javascript:void(0);" >
@@ -34,6 +34,10 @@
 
                     <li>
                         <a href="/" class="waves-effect"><i class="zmdi zmdi-view-dashboard"></i> <span> Dashboard </span> </a>
+                    </li>
+
+                    <li>
+                        <a href="/leaderboard/users" class="waves-effect"><i class="zmdi zmdi-accounts"></i> <span> Leaderboard </span> </a>
                     </li>
 
                     <li class="has_sub">
