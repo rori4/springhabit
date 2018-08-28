@@ -1,16 +1,17 @@
 package org.rangelstoilov.services.user;
 
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.rangelstoilov.entities.Role;
 import org.rangelstoilov.entities.User;
+import org.rangelstoilov.models.view.user.UserAdminViewModel;
 import org.rangelstoilov.models.view.user.UserDashboardViewModel;
 import org.rangelstoilov.models.view.user.UserRegisterModel;
 import org.rangelstoilov.models.view.user.UserRewardModel;
 import org.rangelstoilov.repositories.UserRepository;
 import org.rangelstoilov.services.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -63,7 +64,6 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public UserDashboardViewModel getUserDashboardDataByEmail(String email) {
         return modelMapper.map(userRepository.findFirstByEmail(email), UserDashboardViewModel.class);
     }
@@ -78,7 +78,6 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public UserRewardModel rewardUserForTaskDone(String email, Integer streakMultiplier) {
         UserRewardModel userRewardModel = new UserRewardModel();
         User user = this.userRepository.findFirstByEmail(email);
@@ -135,7 +134,6 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public UserRewardModel damageUserForTaskNotDone(String email, Integer streakMultiplier) {
         UserRewardModel userRewardModel = new UserRewardModel();
         User user = this.userRepository.findFirstByEmail(email);
@@ -151,13 +149,11 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public User findFirstByEmail(String userEmail) {
         return userRepository.findFirstByEmail(userEmail);
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public List<UserDashboardViewModel> getAllUsers() {
         List<User> all = this.userRepository.findAll();
         all.sort((u1, u2) -> u2.getGold().compareTo(u1.getGold()));
@@ -167,13 +163,20 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    public List<UserAdminViewModel> getAllUsersWithRoles() {
+        List<User> all = this.userRepository.findAll();
+        all.sort((u1, u2) -> u2.getGold().compareTo(u1.getGold()));
+        java.lang.reflect.Type allUserType = new TypeToken<List<UserAdminViewModel>>() {
+        }.getType();
+        return this.modelMapper.map(all, allUserType);
+    }
+
+    @Override
     public User findFirstById(String id) {
         return this.userRepository.findFirstById(id);
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public List<UserDashboardViewModel> getChallengesSent(String userEmail) {
         User firstByEmail = this.userRepository.findFirstByEmail(userEmail);
         List<User> challengesSend = firstByEmail.getChallengesSend();
@@ -184,7 +187,6 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public List<UserDashboardViewModel> getChallengesPending(String userEmail) {
         User firstByEmail = this.userRepository.findFirstByEmail(userEmail);
         List<User> challengesPending = firstByEmail.getChallengesPending();
@@ -195,7 +197,6 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public List<UserDashboardViewModel> getChallengesAccepted(String userEmail) {
         User firstByEmail = this.userRepository.findFirstByEmail(userEmail);
         List<User> challengesAccepted = firstByEmail.getChallengesAccepted();
@@ -206,7 +207,6 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public UserDashboardViewModel sendChallenge(String id, String userEmail) {
         User currentUser = this.userRepository.findFirstByEmail(userEmail);
         User challenged = this.userRepository.findFirstById(id);
@@ -226,7 +226,6 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public UserDashboardViewModel approveChallenge(String id, String userEmail) {
         User currentUser = this.userRepository.findFirstByEmail(userEmail);
         User challenger = currentUser.getChallengesPending().stream()
@@ -255,7 +254,6 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public UserDashboardViewModel cancelChallenge(String id, String userEmail) {
         User currentUser = this.userRepository.findFirstByEmail(userEmail);
         User challenger = currentUser.getChallengesSend().stream()
@@ -274,7 +272,6 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public UserDashboardViewModel declineChallenge(String id, String userEmail) {
         User currentUser = this.userRepository.findFirstByEmail(userEmail);
         User challenger = currentUser.getChallengesPending().stream()
@@ -293,7 +290,6 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public List<UserDashboardViewModel> getAllUserAvailableToChallenge(String userEmail) {
         List<User> all = this.userRepository.findAll();
         User firstByEmail = this.userRepository.findFirstByEmail(userEmail);
@@ -304,5 +300,20 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
         java.lang.reflect.Type allUserType = new TypeToken<List<UserDashboardViewModel>>() {
         }.getType();
         return this.modelMapper.map(all, allUserType);
+    }
+
+    @Override
+    public UserAdminViewModel getUserById(String id) {
+        return this.modelMapper.map(this.userRepository.findFirstById(id),UserAdminViewModel.class);
+    }
+
+    @Override
+    public UserAdminViewModel saveUserEdit(UserAdminViewModel userAdminViewModel) {
+        User mappedToEntity = this.modelMapper.map(userAdminViewModel, User.class);
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        User firstById = this.userRepository.findFirstById(userAdminViewModel.getId());
+        this.modelMapper.map(mappedToEntity, firstById);
+        User saved = this.userRepository.save(firstById);
+        return this.modelMapper.map(saved, UserAdminViewModel.class);
     }
 }

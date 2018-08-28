@@ -50,17 +50,8 @@
                         </ul>
                     </li>
 
-                    <li class="has_sub" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a href="javascript:void(0);" class="waves-effect"><i class="zmdi zmdi-collection-text"></i><span class="label label-warning pull-right">7</span><span> User Manager </span> </a>
-                        <ul class="list-unstyled">
-                            <li><a href="javascript:void(0);">General Elements</a></li>
-                            <li><a href="javascript:void(0);">Advanced Form</a></li>
-                            <li><a href="javascript:void(0);">Form Validation</a></li>
-                            <li><a href="javascript:void(0);">Form Wizard</a></li>
-                            <li><a href="javascript:void(0);">Form Uploads</a></li>
-                            <li><a href="javascript:void(0);">Wysiwig Editors</a></li>
-                            <li><a href="javascript:void(0);">X-editable</a></li>
-                        </ul>
+                    <li sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a href="/admin/users" class="waves-effect"><i class="zmdi zmdi-collection-text"></i><span> User Manager </span> </a>
                     </li>
                 </ul>
                 <div class="clearfix"></div>
