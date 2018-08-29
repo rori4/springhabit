@@ -24,40 +24,38 @@ let admin = (() => {
         });
     }
 
-    function openModal() {
-        $('.edit-user').click(function () {
-            let id = $(this).attr('usr-id');
-            removeErrors();
-            $.ajax({
-                type: 'GET',
-                url: "/api/admin/user?id=" + id,
-            }).done((data) => {
-                console.log(data);
-                userId.val(data.id);
-                userName.val(data.name);
-                userLevel.val(data.level);
-                userExp.val(data.experience);
-                userHealth.val(data.health);
-                userMaxHealth.val(data.maxHealth);
-                userGold.val(data.gold);
-                let roleIds = data.roles.map(function (obj) {
-                    return obj.id;
-                });
-                userRoles.val(roleIds).trigger('change');
-
-            }).fail((err) => {
-                //Add notify in corner
-                console.log(err);
+    function openModal(el) {
+        let id = $(el).attr('usr-id');
+        removeErrors();
+        $.ajax({
+            type: 'GET',
+            url: "/api/admin/user?id=" + id,
+        }).done((data) => {
+            console.log(data);
+            userId.val(data.id);
+            userName.val(data.name);
+            userLevel.val(data.level);
+            userExp.val(data.experience);
+            userHealth.val(data.health);
+            userMaxHealth.val(data.maxHealth);
+            userGold.val(data.gold);
+            let roleIds = data.roles.map(function (obj) {
+                return obj.id;
             });
+            userRoles.val(roleIds).trigger('change');
 
-            let modal = new Custombox.modal({
-                content: {
-                    effect: 'fadein',
-                    target: '#user-edit-modal'
-                }
-            });
-            modal.open();
-        })
+        }).fail((err) => {
+            //Add notify in corner
+            console.log(err);
+        });
+
+        let modal = new Custombox.modal({
+            content: {
+                effect: 'fadein',
+                target: '#user-edit-modal'
+            }
+        });
+        modal.open();
     }
 
     function submitUserEdit() {
@@ -125,5 +123,4 @@ let admin = (() => {
 })();
 
 admin.preloadRolesIntoModal();
-admin.openModal();
 admin.submitUserEdit();
