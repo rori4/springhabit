@@ -1,5 +1,6 @@
 package org.rangelstoilov.services.recurringTask;
 
+import org.rangelstoilov.custom.enums.Period;
 import org.rangelstoilov.custom.enums.TaskStatus;
 import org.rangelstoilov.models.view.recurringTask.RecurringTaskModel;
 import org.rangelstoilov.models.view.user.UserRewardModel;
@@ -20,4 +21,8 @@ public interface RecurringTaskService {
     RecurringTaskModel delete(String id, String userEmail);
 
     RecurringTaskModel activate(String id, String userEmail);
+
+    void resetAllTasksByPeriod(Period period);
+
+    void doDamageForRecurringTasksNotDoneByPeriod(Period period);
 }

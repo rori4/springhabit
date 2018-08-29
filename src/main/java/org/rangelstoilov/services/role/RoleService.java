@@ -1,7 +1,7 @@
 package org.rangelstoilov.services.role;
 
 import org.rangelstoilov.entities.Role;
-import org.rangelstoilov.models.role.RoleModel;
+import org.rangelstoilov.models.view.role.RoleModel;
 
 import java.util.List;
 

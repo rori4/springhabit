@@ -1,5 +1,6 @@
 let stats = (() => {
 
+
     function reloadStats() {
             $.ajax({
                 type: 'GET',
@@ -76,7 +77,7 @@ let stats = (() => {
 
     return {
         reloadStats,
-        updateChallengersStats
+        updateChallengersStats,
     }
 })();
 

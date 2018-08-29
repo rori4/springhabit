@@ -1,4 +1,4 @@
-package org.rangelstoilov.models.role;
+package org.rangelstoilov.models.view.role;
 
 public class RoleModel {
     private Long id;

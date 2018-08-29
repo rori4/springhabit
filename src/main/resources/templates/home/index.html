@@ -12,3 +12,40 @@
     <th:block th:replace="fragments/modals/habit-modal"></th:block>
     <th:block th:replace="fragments/modals/recurring-modal"></th:block>
 </section>
+<th:block layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: 'GET',
+                url: "/api/user",
+            }).done((data) => {
+                console.log(data);
+                defineWebSocket(data.id);
+            }).fail((err) => {
+                console.log(err);
+            });
+
+            // var messageList = $("#messages");
+            // defined a connection to a new socket endpoint
+            function defineWebSocket(id) {
+                var socket = new SockJS('/stomp');
+                var stompClient = Stomp.over(socket);
+                stompClient.connect({ }, function(frame) {
+                    // subscribe to the /topic/message endpoint
+                    stompClient.subscribe("/"+id, function(data) {
+                        let message = jQuery.parseJSON(data.body);
+                        console.log(message);
+                        noty.handleWebSocketNotifications(message);
+                        stats.reloadStats();
+                    });
+
+                });
+            }
+
+        });
+    </script>
+</th:block>
+</body>
+</html>

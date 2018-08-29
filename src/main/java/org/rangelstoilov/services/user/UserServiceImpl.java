@@ -9,9 +9,11 @@ import org.rangelstoilov.models.view.user.UserAdminViewModel;
 import org.rangelstoilov.models.view.user.UserDashboardViewModel;
 import org.rangelstoilov.models.view.user.UserRegisterModel;
 import org.rangelstoilov.models.view.user.UserRewardModel;
+import org.rangelstoilov.models.ws.WebSocketMsg;
 import org.rangelstoilov.repositories.UserRepository;
 import org.rangelstoilov.services.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,13 +33,15 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final SimpMessagingTemplate webSocket;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder, ModelMapper modelMapper, SimpMessagingTemplate webSocket) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
+        this.webSocket = webSocket;
     }
 
     @Override
@@ -85,6 +89,7 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
         //This will determine the exp reward multiplier
         Integer rewardMultiplier = BASE_REWARD_MULTIPLIER * user.getLevel();
         Integer damage = user.getMaxHealth()/BASE_DMG_MULTIPLIER;
+
         //Possible rewards
         Integer exp = rewardMultiplier * streakMultiplier;
         Integer gold = rewardMultiplier / 2 * streakMultiplier;
@@ -109,8 +114,10 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
                     user.setGold(user.getGold()+challengerGold);
                     userRewardModel.setGold(userRewardModel.getGold()+challengerGold);
                     userRewardModel.setKills(userRewardModel.getKills()+1);
+                    webSocket.convertAndSend(String.format("/%s",challenger.getId()), new WebSocketMsg("damage", singleChallengerDmg,"You have been killed",user.getName()));
                 } else {
                     challenger.setHealth(challenger.getHealth()-singleChallengerDmg);
+                    webSocket.convertAndSend(String.format("/%s",challenger.getId()), new WebSocketMsg("damage", singleChallengerDmg,"You have taken damage",user.getName()));
                 }
             }
             this.userRepository.saveAll(challengesAccepted);
@@ -142,6 +149,21 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
         user.setHealth(user.getHealth() - damage);
         if (user.getHealth() - damage <= 0) {
             userRewardModel.setLevel(-1);
+
+            //When you kill yourself you spread half of your gold among challengers
+            int rewardToChallengers = user.getGold() / 2;
+            List<User> challengesAccepted = user.getChallengesAccepted();
+            if(!challengesAccepted.isEmpty()){
+                int rewardForEach = rewardToChallengers/challengesAccepted.size();
+                for (User challenger : challengesAccepted) {
+                    challenger.setGold(challenger.getGold()+rewardForEach);
+                    List<User> challengerChallengesAccepted = challenger.getChallengesAccepted();
+                    challengerChallengesAccepted.remove(user);
+                    challenger.setChallengesAccepted(challengerChallengesAccepted);
+                    webSocket.convertAndSend(String.format("/%s",challenger.getId()), new WebSocketMsg("reward", rewardForEach,"You get some of his gold",user.getName()));
+                }
+            }
+
             user.dead();
         }
         this.userRepository.save(user);

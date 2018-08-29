@@ -1,7 +1,7 @@
 package org.rangelstoilov.controllers;
 
 import com.google.gson.Gson;
-import org.rangelstoilov.models.role.RoleModel;
+import org.rangelstoilov.models.view.role.RoleModel;
 import org.rangelstoilov.models.view.user.UserAdminViewModel;
 import org.rangelstoilov.services.role.RoleService;
 import org.rangelstoilov.services.user.UserService;

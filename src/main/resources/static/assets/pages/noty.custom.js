@@ -1,9 +1,10 @@
 let noty = (() => {
     let timeout = 1000;
     let timeoutSlow = 4000;
+
     function handleData(data) {
-        Object.keys(data).forEach(function(reward){
-            if(data[reward]!==null){
+        Object.keys(data).forEach(function (reward) {
+            if (data[reward] !== null) {
                 switch (reward) {
                     case 'experience':
                         expNotification(data[reward]);
@@ -12,21 +13,21 @@ let noty = (() => {
                         goldNotification(data[reward]);
                         break;
                     case 'health':
-                        if(data[reward] > 0){
+                        if (data[reward] > 0) {
                             maxHealthNotification(data[reward]);
                         } else {
                             damageNotification(data[reward]);
                         }
                         break;
                     case 'level':
-                        if(data[reward] > 0) {
+                        if (data[reward] > 0) {
                             levelNotification();
                         } else {
                             deadNotification();
                         }
                         break;
                     case 'kills':
-                        if(data[reward] > 0) {
+                        if (data[reward] > 0) {
                             killsNotification(data[reward]);
                         }
                         break;
@@ -35,9 +36,53 @@ let noty = (() => {
         });
     }
 
+    function handleWebSocketNotifications(data) {
+        console.log(data);
+        Object.keys(data).forEach(function (type) {
+            console.log(data[type]);
+            switch (data[type]) {
+                case 'damage':
+                    wsDamageNotification(data);
+                    break;
+                case 'reward':
+                    wsRewardNotification(data);
+                    break;
+            }
+        })
+    }
+
+    function wsDamageNotification(message) {
+        console.log(message);
+        new Noty({
+            text: '<div class="text-left">💥 <strong>-' + message.val + 'hp</strong> ' + message.msg + ' by ' + message.opponentName + '</div>',
+            type: 'error',
+            theme: 'mint',
+            layout: 'topRight',
+            timeout: timeout,
+            animation: {
+                open: mojsShow,
+                close: mojsClose
+            }
+        }).show();
+    }
+
+    function wsRewardNotification(message) {
+        new Noty({
+            text: '<div class="text-left">🤣 <strong>+' + message.val + ' BTC</strong> ' + message.opponentName + ' has killed himself! ' + message.msg + '</div>',
+            type: 'warning',
+            theme: 'mint',
+            layout: 'topRight',
+            timeout: timeoutSlow,
+            animation: {
+                open: mojsShow,
+                close: mojsClose
+            }
+        }).show();
+    }
+
     function goldNotification(gold) {
         new Noty({
-            text: '<div class="text-left"><strong>💰 +'+gold+ 'BTC</strong> You earned some gold!</div>',
+            text: '<div class="text-left"><strong>💰 +' + gold + 'BTC</strong> You earned some gold!</div>',
             type: 'warning',
             theme: 'mint',
             layout: 'topRight',
@@ -79,7 +124,7 @@ let noty = (() => {
 
     function killsNotification(data) {
         new Noty({
-            text: '<div class="text-left">🏆 <strong>'+data+' kills </strong><br>You have killed '+data+' challengers and got from each half of their gold! CONGRATULATIONS!</div>',
+            text: '<div class="text-left">🏆 <strong>' + data + ' kills </strong><br>You have killed ' + data + ' challengers and got from each half of their gold! CONGRATULATIONS!</div>',
             type: 'information',
             theme: 'mint',
             layout: 'topRight',
@@ -94,7 +139,7 @@ let noty = (() => {
 
     function expNotification(xp) {
         new Noty({
-            text: '<div class="text-left"><strong>⚡ +'+xp+ 'xp</strong> You earned some experience!</div>',
+            text: '<div class="text-left"><strong>⚡ +' + xp + 'xp</strong> You earned some experience!</div>',
             type: 'success',
             theme: 'mint',
             layout: 'topRight',
@@ -108,7 +153,7 @@ let noty = (() => {
 
     function maxHealthNotification(health) {
         new Noty({
-            text: '<div class="text-left"><strong>💖 +'+health+ 'hp</strong> to max health!</div>',
+            text: '<div class="text-left"><strong>💖 +' + health + 'hp</strong> to max health!</div>',
             type: 'success',
             theme: 'mint',
             layout: 'topRight',
@@ -122,7 +167,7 @@ let noty = (() => {
 
     function damageNotification(health) {
         new Noty({
-            text: '<div class="text-left"><strong>💖 '+health+ 'hp</strong> You have taken damage!</div>',
+            text: '<div class="text-left"><strong>💖 ' + health + 'hp</strong> You have taken damage!</div>',
             type: 'error',
             theme: 'mint',
             layout: 'topRight',
@@ -139,7 +184,8 @@ let noty = (() => {
         goldNotification,
         levelNotification,
         maxHealthNotification,
-        damageNotification
+        damageNotification,
+        handleWebSocketNotifications
     }
 })();
 
@@ -149,7 +195,7 @@ var mojsShow = function (promise) {
     var Timeline = new mojs.Timeline();
     var body = new mojs.Html({
         el: n.barDom,
-        x: { 500: 0, delay: 0, duration: 500, easing: 'elastic.out' },
+        x: {500: 0, delay: 0, duration: 500, easing: 'elastic.out'},
         isForce3d: true,
         onComplete: function () {
             promise(function (resolve) {
@@ -163,7 +209,7 @@ var mojsShow = function (promise) {
         width: 200,
         height: n.barDom.getBoundingClientRect().height,
         radius: 0,
-        x: { [150]: -150 },
+        x: {[150]: -150},
         duration: 1.2 * 500,
         isShowStart: true
     })
@@ -177,7 +223,7 @@ var mojsShow = function (promise) {
         top: n.barDom.getBoundingClientRect().height + 75,
         degree: 90,
         radius: 75,
-        angle: { [-90]: 40 },
+        angle: {[-90]: 40},
         children: {
             fill: '#EBD761',
             delay: 'stagger(500, -50)',
@@ -192,7 +238,7 @@ var mojsShow = function (promise) {
         count: 2,
         degree: 0,
         angle: 75,
-        radius: { 0: 100 },
+        radius: {0: 100},
         top: '90%',
         children: {
             fill: '#EBD761',
@@ -212,7 +258,7 @@ var mojsClose = function (promise) {
     var n = this
     new mojs.Html({
         el: n.barDom,
-        x: { 0: 500, delay: 10, duration: 500, easing: 'cubic.out' },
+        x: {0: 500, delay: 10, duration: 500, easing: 'cubic.out'},
         isForce3d: true,
         onComplete: function () {
             promise(function (resolve) {
@@ -226,14 +272,14 @@ var bouncejsShow = function (promise) {
     var n = this;
     new Bounce()
         .translate({
-            from: { x: 450, y: 0 }, to: { x: 0, y: 0 },
+            from: {x: 450, y: 0}, to: {x: 0, y: 0},
             easing: 'bounce',
             duration: 1000,
             bounces: 4,
             stiffness: 3
         })
         .scale({
-            from: { x: 1.2, y: 1 }, to: { x: 1, y: 1 },
+            from: {x: 1.2, y: 1}, to: {x: 1, y: 1},
             easing: 'bounce',
             duration: 1000,
             delay: 100,
@@ -241,7 +287,7 @@ var bouncejsShow = function (promise) {
             stiffness: 1
         })
         .scale({
-            from: { x: 1, y: 1.2 }, to: { x: 1, y: 1 },
+            from: {x: 1, y: 1.2}, to: {x: 1, y: 1},
             easing: 'bounce',
             duration: 1000,
             delay: 100,
@@ -261,7 +307,7 @@ var bouncejsClose = function (promise) {
     var n = this
     new Bounce()
         .translate({
-            from: { x: 0, y: 0 }, to: { x: 450, y: 0 },
+            from: {x: 0, y: 0}, to: {x: 450, y: 0},
             easing: 'bounce',
             duration: 500,
             bounces: 4,

@@ -9,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class SecurityController extends BaseController {
-
     @GetMapping("/login")
     public ModelAndView login() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

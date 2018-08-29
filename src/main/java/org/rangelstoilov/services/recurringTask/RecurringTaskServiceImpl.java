@@ -2,6 +2,7 @@ package org.rangelstoilov.services.recurringTask;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.rangelstoilov.custom.enums.Period;
 import org.rangelstoilov.custom.enums.TaskStatus;
 import org.rangelstoilov.entities.RecurringTask;
 import org.rangelstoilov.entities.User;
@@ -85,19 +86,44 @@ public class RecurringTaskServiceImpl implements RecurringTaskService {
             return this.modelMapper.map(recurringTaskById,RecurringTaskModel.class);
         } else return null;
     }
+    @Override
+    public void resetAllTasksByPeriod(Period period){
+        List<RecurringTask> allByTaskStatusAndResetPeriod = this.recurringTaskRepository.findAllByTaskStatusAndResetPeriod(TaskStatus.DONE, period);
+        if(!allByTaskStatusAndResetPeriod.isEmpty()){
+            for (RecurringTask task: allByTaskStatusAndResetPeriod) {
+                User user = task.getUser();
+                changeRecurringTaskStatus(task,TaskStatus.ACTIVE,user);
+            }
+        }
+    }
+
+    @Override
+    public void doDamageForRecurringTasksNotDoneByPeriod(Period period){
+        List<RecurringTask> allByTaskStatusAndResetPeriod = this.recurringTaskRepository.findAllByTaskStatusAndResetPeriod(TaskStatus.ACTIVE, period);
+        if(!allByTaskStatusAndResetPeriod.isEmpty()){
+            for (RecurringTask task: allByTaskStatusAndResetPeriod) {
+                User user = task.getUser();
+                this.userService.damageUserForTaskNotDone(user.getEmail(),1);
+            }
+        }
+    }
 
     private boolean changeRecurringTaskStatus(String userEmail, RecurringTask recurringTaskById, TaskStatus taskStatus) {
         User user = this.userService.findFirstByEmail(userEmail);
         if(recurringTaskById.getUser().getId().equals(user.getId())){
-            Integer orderNumber = recurringTaskById.getOrderNumber();
-            TaskStatus recurringTaskByIdTaskStatus = recurringTaskById.getTaskStatus();
-            recurringTaskById.setOrderNumber(this.recurringTaskRepository.countAllByUserAndTaskStatus(user, taskStatus)+1);
-            recurringTaskById.setTaskStatus(taskStatus);
-            fixOrderOfElements(recurringTaskByIdTaskStatus, orderNumber);
-            recurringTaskById.setCount(recurringTaskById.getCount()+1);
-            this.recurringTaskRepository.save(recurringTaskById);
+            changeRecurringTaskStatus(recurringTaskById, taskStatus, user);
             return true;
         } else return false;
+    }
+
+    private void changeRecurringTaskStatus(RecurringTask recurringTaskById, TaskStatus taskStatus, User user) {
+        Integer orderNumber = recurringTaskById.getOrderNumber();
+        TaskStatus recurringTaskByIdTaskStatus = recurringTaskById.getTaskStatus();
+        recurringTaskById.setOrderNumber(this.recurringTaskRepository.countAllByUserAndTaskStatus(user, taskStatus)+1);
+        recurringTaskById.setTaskStatus(taskStatus);
+        fixOrderOfElements(recurringTaskByIdTaskStatus, orderNumber);
+        recurringTaskById.setCount(recurringTaskById.getCount()+1);
+        this.recurringTaskRepository.save(recurringTaskById);
     }
 
     private void fixOrderOfElements(TaskStatus taskStatus, Integer orderNumber) {

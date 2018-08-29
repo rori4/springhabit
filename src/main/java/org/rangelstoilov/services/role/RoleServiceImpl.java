@@ -3,7 +3,7 @@ package org.rangelstoilov.services.role;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.rangelstoilov.entities.Role;
-import org.rangelstoilov.models.role.RoleModel;
+import org.rangelstoilov.models.view.role.RoleModel;
 import org.rangelstoilov.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

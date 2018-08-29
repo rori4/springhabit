@@ -266,6 +266,7 @@ public class User  implements UserDetails {
         this.setMaxHealth(Math.max(BASE_HEALTH,this.getMaxHealth()/2));
         this.setHealth(this.getMaxHealth());
         this.setGold(this.getGold()/2);
+        this.setChallengesAccepted(new ArrayList<>());
     }
 
     @Override
