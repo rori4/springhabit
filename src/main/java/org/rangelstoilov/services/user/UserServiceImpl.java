@@ -27,7 +27,7 @@ import java.util.List;
 @Service
 @Transactional
 public class  UserServiceImpl implements UserService, UserDetailsService {
-    private static final int BASE_REWARD_MULTIPLIER = 100;
+    public static final int BASE_REWARD_MULTIPLIER = 100;
     public static final int BASE_DMG_MULTIPLIER = 20;
     private final UserRepository userRepository;
     private final RoleService roleService;
@@ -45,7 +45,7 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public boolean register(UserRegisterModel userViewModel) {
+    public User register(UserRegisterModel userViewModel) {
         User user = this.modelMapper.map(userViewModel, User.class);
         user.setPassword(
                 this.passwordEncoder.encode(userViewModel.getPassword())
@@ -56,8 +56,7 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
         user.getRoles().add(role);
 
         this.roleService.addRole(role);
-        this.userRepository.save(user);
-        return true;
+        return this.userRepository.save(user);
     }
 
 
@@ -120,12 +119,11 @@ public class  UserServiceImpl implements UserService, UserDetailsService {
                     webSocket.convertAndSend(String.format("/%s",challenger.getId()), new WebSocketMsg("damage", singleChallengerDmg,"You have taken damage",user.getName()));
                 }
             }
+
             this.userRepository.saveAll(challengesAccepted);
             challengesAccepted.removeAll(deadChallengers);
             user.setChallengesAccepted(challengesAccepted);
         }
-
-
         //When leveling up
         if (user.getExperience() + exp >= user.getNextLevelExp()) {
             userRewardModel.setLevel(1);

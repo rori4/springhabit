@@ -9,7 +9,7 @@ import org.rangelstoilov.models.view.user.UserRewardModel;
 import java.util.List;
 
 public interface UserService {
-    boolean register(UserRegisterModel model);
+    User register(UserRegisterModel model);
     boolean userExists(String username);
     UserDashboardViewModel getUserDashboardDataByEmail(String email);
     UserRewardModel rewardUserForTaskDone(String email, Integer streakMultiplier);

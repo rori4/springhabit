@@ -90,15 +90,16 @@
 			<artifactId>thymeleaf-layout-dialect</artifactId>
 			<version>2.3.0</version>
 		</dependency>
-		<!--Social dependencies-->
-		<dependency>
-			<groupId>org.springframework.security.oauth.boot</groupId>
-			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
-			<version>2.0.0.RELEASE</version>
-		</dependency>
+		<!--Web socket -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <!--Hsqldb-->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
